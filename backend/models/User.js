@@ -9,9 +9,9 @@ const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
     lowercase: true,
     trim: true
+    // ✅ REMOVED: unique: true (we'll define index separately)
   },
   password: {
     type: String,
@@ -23,7 +23,7 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['owner', 'platform_admin'], // owner = teacher who owns institute
+    enum: ['owner', 'platform_admin'],
     default: 'owner'
   },
   instituteId: {
@@ -37,7 +37,7 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
-// Compound index: email must be globally unique
+// ✅ FIXED: Define unique index only once, here
 UserSchema.index({ email: 1 }, { unique: true });
 
 module.exports = mongoose.model('User', UserSchema);
