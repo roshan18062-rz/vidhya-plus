@@ -76,7 +76,7 @@ router.post('/register', [
       email,
       password: hashedPassword,
       fullName: ownerName,
-      role: 'admin',
+      role: 'owner',
       instituteId: institute._id
     });
 
