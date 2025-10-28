@@ -3,23 +3,19 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 
-// Load environment variables
 dotenv.config();
 
-// Initialize Express
 const app = express();
-
-// Connect to Database
 connectDB();
 
-// Middleware
-// CORS Configuration
-const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true,
-  optionsSuccessStatus: 200
-};
-app.use(cors(corsOptions));
+// ✅ FIXED CORS - Allow all origins for now
+app.use(cors({
+  origin: '*', // Allow all origins temporarily
+  credentials: false,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -29,54 +25,20 @@ app.use('/api/students', require('./routes/students'));
 app.use('/api/attendance', require('./routes/attendance'));
 app.use('/api/fees', require('./routes/fees'));
 
-// Health check route
+// Health check
 app.get('/', (req, res) => {
-  res.json({ message: 'MR Classes API is running...' });
+  res.json({ 
+    message: 'Vidhya+ API is running...',
+    timestamp: new Date().toISOString()
+  });
 });
 
-// Test SMS route
-app.post('/api/test-sms', async (req, res) => {
-  try {
-    const { phoneNumber, message } = req.body;
-    
-    if (!phoneNumber) {
-      return res.status(400).json({ message: 'Phone number is required' });
-    }
-
-    const { sendSMS } = require('./utils/smsService');
-    const result = await sendSMS(phoneNumber, message || 'Test message from MR Classes');
-    
-    if (result.success) {
-      res.json({ 
-        success: true, 
-        message: 'SMS sent successfully!',
-        data: result.data 
-      });
-    } else {
-      res.status(500).json({ 
-        success: false, 
-        message: 'Failed to send SMS',
-        error: result.error 
-      });
-    }
-  } catch (error) {
-    res.status(500).json({ 
-      success: false, 
-      message: 'Server error',
-      error: error.message 
-    });
-  }
-});
-
-// Error handling middleware
+// Error handling
 app.use((err, req, res, next) => {
   console.error('Error:', err);
-
-  // Don't leak error details in production
   const errorMessage = process.env.NODE_ENV === 'production' 
     ? 'Something went wrong. Please try again.' 
     : err.message;
-
   res.status(err.status || 500).json({ 
     success: false,
     message: errorMessage,
@@ -84,7 +46,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Handle 404
+// 404 handler
 app.use((req, res) => {
   res.status(404).json({ 
     success: false, 
@@ -92,8 +54,8 @@ app.use((req, res) => {
   });
 });
 
-// Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on port ${PORT}`);
+  console.log(`🌍 CORS enabled for all origins`);
 });
