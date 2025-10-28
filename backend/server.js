@@ -55,7 +55,10 @@ app.use((req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+const HOST = '0.0.0.0'; // Bind to all network interfaces
+
+app.listen(PORT, HOST, () => {
   console.log(`🚀 Server is running on port ${PORT}`);
   console.log(`🌍 CORS enabled for all origins`);
+  console.log(`📡 Listening on ${HOST}:${PORT}`);
 });
