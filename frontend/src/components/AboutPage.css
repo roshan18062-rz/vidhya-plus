@@ -1,0 +1,541 @@
+/* About Page Styles */
+.about-page {
+  width: 100%;
+  overflow-x: hidden;
+  background: #fff;
+}
+
+/* Navigation */
+.about-nav {
+  background: white;
+  padding: 1rem 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.about-nav .logo {
+  cursor: pointer;
+}
+
+.btn-back {
+  background: transparent;
+  color: #667eea;
+  border: 2px solid #667eea;
+  padding: 0.6rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-back:hover {
+  background: #667eea;
+  color: white;
+}
+
+/* Hero Section */
+.about-hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 5rem 2rem;
+  text-align: center;
+  color: white;
+}
+
+.about-hero h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+.about-tagline {
+  font-size: 1.4rem;
+  opacity: 0.95;
+}
+
+/* Content Container */
+.content-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Story Section */
+.story-section {
+  padding: 5rem 2rem;
+  background: #f8f9fa;
+}
+
+.story-section h2 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.story-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.story-content p {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.story-content strong {
+  color: #667eea;
+}
+
+/* Developer Section */
+.developer-section-about {
+  padding: 5rem 2rem;
+  background: white;
+}
+
+.developer-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.developer-photo {
+  text-align: center;
+  position: sticky;
+  top: 100px;
+}
+
+.avatar-large {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 2rem;
+  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+}
+
+.avatar-text {
+  font-size: 6rem;
+}
+
+.social-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.social-btn {
+  background: #f8f9fa;
+  border: 2px solid #e3e8ef;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+}
+
+.social-btn:hover {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+  transform: translateY(-2px);
+}
+
+.developer-details h2 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.role {
+  color: #667eea;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.bio p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+/* Skills Section */
+.skills-section {
+  margin: 3rem 0;
+}
+
+.skills-section h3 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.skill-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border-left: 4px solid #667eea;
+}
+
+.skill-icon {
+  font-size: 2rem;
+}
+
+.skill-item strong {
+  display: block;
+  color: #333;
+  margin-bottom: 0.3rem;
+}
+
+.skill-item p {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Achievements */
+.achievements {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.achievement-item {
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+  color: white;
+}
+
+.achievement-item h4 {
+  font-size: 3rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.achievement-item p {
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* Vision Section */
+.vision-section {
+  padding: 5rem 2rem;
+  background: #f8f9fa;
+}
+
+.vision-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.vision-card {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.vision-icon {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+.vision-card h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.vision-card p {
+  color: #666;
+  line-height: 1.6;
+}
+
+/* Solo Developer Section */
+.solo-dev-section {
+  padding: 5rem 2rem;
+  background: white;
+}
+
+.solo-dev-section h2 {
+  font-size: 2.5rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.section-subtitle {
+  text-align: center;
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 3rem;
+}
+
+.advantages-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.advantage-card {
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border-left: 4px solid #667eea;
+}
+
+.advantage-number {
+  font-size: 3rem;
+  font-weight: 900;
+  color: rgba(102, 126, 234, 0.2);
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.advantage-card h3 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.advantage-card p {
+  color: #666;
+  line-height: 1.6;
+}
+
+/* Tech Stack Section */
+.tech-stack-section {
+  padding: 5rem 2rem;
+  background: #f8f9fa;
+}
+
+.tech-stack-section h2 {
+  font-size: 2.5rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.tech-stack-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.tech-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.tech-card h4 {
+  color: #667eea;
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+}
+
+.tech-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.tech-card li {
+  padding: 0.5rem 0;
+  color: #666;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.tech-card li:last-child {
+  border-bottom: none;
+}
+
+/* Contact Section */
+.contact-section {
+  padding: 5rem 2rem;
+  background: white;
+}
+
+.contact-section h2 {
+  font-size: 2.5rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.contact-card {
+  text-align: center;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.contact-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.contact-card h3 {
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.contact-card p {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.contact-btn {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.contact-btn:hover {
+  background: #5568d3;
+  transform: translateY(-2px);
+}
+
+/* CTA Section */
+.about-cta {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 5rem 2rem;
+  text-align: center;
+  color: white;
+}
+
+.about-cta h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.about-cta p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn-primary-cta {
+  background: #ffd700;
+  color: #333;
+  border: none;
+  padding: 1rem 2.5rem;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-primary-cta:hover {
+  background: #ffed4e;
+  transform: translateY(-3px);
+}
+
+.btn-secondary-cta {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+  padding: 1rem 2.5rem;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-secondary-cta:hover {
+  background: white;
+  color: #667eea;
+}
+
+/* Footer */
+.about-footer {
+  background: #2d3748;
+  color: #cbd5e0;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .about-hero h1 {
+    font-size: 2rem;
+  }
+
+  .developer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .developer-photo {
+    position: static;
+  }
+
+  .avatar-large {
+    width: 180px;
+    height: 180px;
+  }
+
+  .avatar-text {
+    font-size: 4rem;
+  }
+
+  .skills-grid,
+  .vision-grid,
+  .advantages-grid,
+  .tech-stack-grid,
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .achievements {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+  }
+}
