@@ -85,6 +85,9 @@ router.get('/:id', async (req, res) => {
 // @route   POST /api/students
 // @desc    Add new student
 // @access  Private (Teacher only)
+// @route   POST /api/students
+// @desc    Add new student
+// @access  Private (Teacher only)
 router.post('/', async (req, res) => {
   try {
     const {
@@ -98,34 +101,34 @@ router.post('/', async (req, res) => {
       studentPhoto
     } = req.body;
 
-    // ✅ SEQUENTIAL ID GENERATION
-    // Get all existing students for this institute
-    const students = await Student.find({ 
+    // ✅ SIMPLE SEQUENTIAL LOGIC - NO TIMESTAMPS!
+    // Get all students for this institute
+    const allStudents = await Student.find({ 
       instituteId: req.user.instituteId 
-    }).select('studentId');
+    }).select('studentId').lean();
 
-    let nextNumber = 1; // Start from 1 if no students
+    let nextNumber = 1;
 
-    if (students.length > 0) {
-      // Extract numeric part from all student IDs
-      const numbers = students.map(s => {
-        // Extract number from format: "MRS36A-0009" -> 9
-        const parts = s.studentId.split('-');
-        const numPart = parts[1];
-        return parseInt(numPart) || 0;
-      });
+    if (allStudents.length > 0) {
+      // Extract all numbers from student IDs
+      const allNumbers = allStudents.map(s => {
+        const idParts = s.studentId.split('-');
+        if (idParts.length >= 2) {
+          return parseInt(idParts[1]) || 0;
+        }
+        return 0;
+      }).filter(num => num > 0);
 
-      // Find the highest number
-      const maxNumber = Math.max(...numbers);
-      
-      // Next student gets highest + 1
-      nextNumber = maxNumber + 1;
+      if (allNumbers.length > 0) {
+        // Get highest number and add 1
+        nextNumber = Math.max(...allNumbers) + 1;
+      }
     }
 
-    // Generate sequential student ID with padding
+    // Generate ID with 4-digit padding
     const studentId = `${req.user.instituteCode}-${String(nextNumber).padStart(4, '0')}`;
 
-    console.log(`✅ Generated sequential student ID: ${studentId} (next after ${nextNumber - 1})`);
+    console.log(`✅ Creating student with ID: ${studentId}`);
 
     const student = new Student({
       studentId,
@@ -143,20 +146,21 @@ router.post('/', async (req, res) => {
 
     await student.save();
     
-    console.log(`✅ Student saved successfully: ${studentId}`);
+    console.log(`✅ Student created successfully: ${studentId} - ${studentName}`);
     
     res.status(201).json(student);
   } catch (error) {
-    console.error('❌ Error adding student:', error);
+    console.error('❌ Error creating student:', error);
     
     if (error.code === 11000) {
       return res.status(400).json({ 
-        message: 'This student ID already exists. Please refresh the page and try again.',
-        error: 'DUPLICATE_ID'
+        message: 'Student ID already exists. Please try again.'
       });
     }
     
-    res.status(500).json({ message: 'Server error while adding student. Please try again.' });
+    res.status(500).json({ 
+      message: 'Failed to add student. Please try again.' 
+    });
   }
 });
 
