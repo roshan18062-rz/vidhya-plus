@@ -144,32 +144,32 @@ function Attendance() {
             </tr>
           </thead>
           <tbody>
-            {students.map(student => (
-              <tr key={student._id}>
-                <td>{student.studentId}</td>
-                <td>{student.studentName}</td>
-                <td>{student.class}</td>
-                <td>{student.boardType}</td>
-                <td>{student.contactNumber}</td>
-                <td>
-                  <div className="attendance-buttons">
-                    <button
-                      className={`btn-attendance ${attendanceData[student._id] === 'present' ? 'present' : ''}`}
-                      onClick={() => handleAttendanceChange(student._id, 'present')}
-                    >
-                      Present
-                    </button>
-                    <button
-                      className={`btn-attendance ${attendanceData[student._id] === 'absent' ? 'absent' : ''}`}
-                      onClick={() => handleAttendanceChange(student._id, 'absent')}
-                    >
-                      Absent
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+  {students.map(student => (
+    <tr key={student._id}>
+      <td data-label="Student ID">{student.studentId}</td>
+      <td data-label="Name">{student.studentName}</td>
+      <td data-label="Class">{student.class}</td>
+      <td data-label="Board">{student.boardType}</td>
+      <td data-label="Contact">{student.contactNumber}</td>
+      <td data-label="Status">
+        <div className="attendance-buttons">
+          <button
+            className={`btn-attendance ${attendanceData[student._id] === 'present' ? 'present' : ''}`}
+            onClick={() => handleAttendanceChange(student._id, 'present')}
+          >
+            Present
+          </button>
+          <button
+            className={`btn-attendance ${attendanceData[student._id] === 'absent' ? 'absent' : ''}`}
+            onClick={() => handleAttendanceChange(student._id, 'absent')}
+          >
+            Absent
+          </button>
+        </div>
+      </td>
+    </tr>
+  ))}
+</tbody>
         </table>
 
         {students.length === 0 && (
