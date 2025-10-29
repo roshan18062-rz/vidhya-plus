@@ -3,7 +3,6 @@ const router = express.Router();
 const Student = require('../models/Student');
 const { authMiddleware } = require('../middleware/auth');
 
-// All routes only need authentication, no role check
 router.use(authMiddleware);
 
 // @route   GET /api/students
@@ -99,8 +98,49 @@ router.post('/', async (req, res) => {
       studentPhoto
     } = req.body;
 
-    const count = await Student.countDocuments({ instituteId: req.user.instituteId });
-    const studentId = `${req.user.instituteCode}-${String(count + 1).padStart(4, '0')}`;
+    // ✅ FIXED: Generate unique student ID with retry logic
+    let studentId;
+    let attempts = 0;
+    const maxAttempts = 5;
+
+    while (attempts < maxAttempts) {
+      if (attempts === 0) {
+        // First attempt: Sequential numbering
+        const count = await Student.countDocuments({ 
+          instituteId: req.user.instituteId 
+        });
+        studentId = `${req.user.instituteCode}-${String(count + 1).padStart(4, '0')}`;
+      } else {
+        // Retry with timestamp
+        const timestamp = Date.now().toString().slice(-6);
+        const random = Math.floor(Math.random() * 100);
+        studentId = `${req.user.instituteCode}-${timestamp}${random}`;
+      }
+
+      // Check if ID already exists
+      const exists = await Student.findOne({ 
+        studentId, 
+        instituteId: req.user.instituteId 
+      });
+
+      if (!exists) {
+        break; // ID is unique, proceed
+      }
+
+      attempts++;
+      console.log(`⚠️ Duplicate ID detected, retrying... (${attempts}/${maxAttempts})`);
+      
+      // Small delay before retry
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
+    if (attempts >= maxAttempts) {
+      return res.status(500).json({ 
+        message: 'Unable to generate unique student ID after multiple attempts. Please try again.' 
+      });
+    }
+
+    console.log(`✅ Generated unique student ID: ${studentId}`);
 
     const student = new Student({
       studentId,
@@ -119,8 +159,17 @@ router.post('/', async (req, res) => {
     await student.save();
     res.status(201).json(student);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error adding student:', error);
+    
+    // Handle duplicate key error
+    if (error.code === 11000) {
+      return res.status(400).json({ 
+        message: 'A student with this ID already exists. Please try again or contact support.',
+        error: 'DUPLICATE_ID'
+      });
+    }
+    
+    res.status(500).json({ message: 'Server error while adding student. Please try again.' });
   }
 });
 
