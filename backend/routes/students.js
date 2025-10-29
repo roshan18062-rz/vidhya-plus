@@ -98,49 +98,34 @@ router.post('/', async (req, res) => {
       studentPhoto
     } = req.body;
 
-    // ✅ FIXED: Generate unique student ID with retry logic
-    let studentId;
-    let attempts = 0;
-    const maxAttempts = 5;
+    // ✅ SEQUENTIAL ID GENERATION
+    // Get all existing students for this institute
+    const students = await Student.find({ 
+      instituteId: req.user.instituteId 
+    }).select('studentId');
 
-    while (attempts < maxAttempts) {
-      if (attempts === 0) {
-        // First attempt: Sequential numbering
-        const count = await Student.countDocuments({ 
-          instituteId: req.user.instituteId 
-        });
-        studentId = `${req.user.instituteCode}-${String(count + 1).padStart(4, '0')}`;
-      } else {
-        // Retry with timestamp
-        const timestamp = Date.now().toString().slice(-6);
-        const random = Math.floor(Math.random() * 100);
-        studentId = `${req.user.instituteCode}-${timestamp}${random}`;
-      }
+    let nextNumber = 1; // Start from 1 if no students
 
-      // Check if ID already exists
-      const exists = await Student.findOne({ 
-        studentId, 
-        instituteId: req.user.instituteId 
+    if (students.length > 0) {
+      // Extract numeric part from all student IDs
+      const numbers = students.map(s => {
+        // Extract number from format: "MRS36A-0009" -> 9
+        const parts = s.studentId.split('-');
+        const numPart = parts[1];
+        return parseInt(numPart) || 0;
       });
 
-      if (!exists) {
-        break; // ID is unique, proceed
-      }
-
-      attempts++;
-      console.log(`⚠️ Duplicate ID detected, retrying... (${attempts}/${maxAttempts})`);
+      // Find the highest number
+      const maxNumber = Math.max(...numbers);
       
-      // Small delay before retry
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Next student gets highest + 1
+      nextNumber = maxNumber + 1;
     }
 
-    if (attempts >= maxAttempts) {
-      return res.status(500).json({ 
-        message: 'Unable to generate unique student ID after multiple attempts. Please try again.' 
-      });
-    }
+    // Generate sequential student ID with padding
+    const studentId = `${req.user.instituteCode}-${String(nextNumber).padStart(4, '0')}`;
 
-    console.log(`✅ Generated unique student ID: ${studentId}`);
+    console.log(`✅ Generated sequential student ID: ${studentId} (next after ${nextNumber - 1})`);
 
     const student = new Student({
       studentId,
@@ -157,14 +142,16 @@ router.post('/', async (req, res) => {
     });
 
     await student.save();
+    
+    console.log(`✅ Student saved successfully: ${studentId}`);
+    
     res.status(201).json(student);
   } catch (error) {
-    console.error('Error adding student:', error);
+    console.error('❌ Error adding student:', error);
     
-    // Handle duplicate key error
     if (error.code === 11000) {
       return res.status(400).json({ 
-        message: 'A student with this ID already exists. Please try again or contact support.',
+        message: 'This student ID already exists. Please refresh the page and try again.',
         error: 'DUPLICATE_ID'
       });
     }
