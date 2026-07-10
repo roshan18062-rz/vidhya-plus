@@ -5,7 +5,10 @@ const Institute = require('../models/Institute');
 // Authentication Middleware
 const authMiddleware = async (req, res, next) => {
   try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
+    // FIX #6: token now read from the httpOnly cookie set at login, not a
+    // client-readable Bearer header sourced from localStorage. Header is kept
+    // as a fallback only for non-browser API clients that can't use cookies.
+    const token = req.cookies?.token || req.header('Authorization')?.replace('Bearer ', '');
 
     if (!token) {
       return res.status(401).json({ message: 'No token, authorization denied' });
@@ -13,18 +16,26 @@ const authMiddleware = async (req, res, next) => {
 
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
-    console.log('✅ Token decoded successfully:', decoded); // DEBUG LOG
-    
+
+    // FIX #10: debug logs only in non-production, and never dump full token payload
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Token decoded for userId:', decoded.userId);
+    }
+
     // Get user and attach to request
     const user = await User.findById(decoded.userId).populate('instituteId');
     
     if (!user) {
-      console.error('❌ User not found for ID:', decoded.userId); // DEBUG LOG
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('User not found for ID:', decoded.userId);
+      }
       return res.status(401).json({ message: 'User not found' });
     }
 
-    console.log('✅ User found:', user.username, user.instituteId.instituteName); // DEBUG LOG
+    // FIX #9: reject tokens issued before the user's last logout/password change
+    if (decoded.tokenVersion !== user.tokenVersion) {
+      return res.status(401).json({ message: 'Session expired. Please login again.' });
+    }
 
     // Check if institute subscription is active
     if (user.instituteId.subscriptionStatus === 'inactive') {
@@ -58,4 +69,12 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-module.exports = { authMiddleware };
+// FIX #4: role-based access control middleware, apply per-route as needed
+const requireRole = (...roles) => (req, res, next) => {
+  if (!req.user || !roles.includes(req.user.role)) {
+    return res.status(403).json({ message: 'Insufficient permissions' });
+  }
+  next();
+};
+
+module.exports = { authMiddleware, requireRole };

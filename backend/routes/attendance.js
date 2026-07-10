@@ -50,7 +50,8 @@ router.post('/', async (req, res) => {
 
     // Send SMS if absent (Disabled for MVP)
     if (status === 'absent') {
-      console.log(`📱 SMS would be sent to ${student.studentName}'s parent (${student.contactNumber})`);
+      // FIX #10: student name + parent phone number no longer logged in plaintext
+      if (process.env.NODE_ENV !== 'production') console.log('SMS would be sent for absent student:', student._id.toString());
       attendance.smsStatus = 'not_sent';
       await attendance.save();
     }
@@ -105,7 +106,8 @@ router.post('/bulk', async (req, res) => {
 
       // FIXED: Changed 'status' to 'record.status'
       if (record.status === 'absent') {
-        console.log(`📱 SMS would be sent to ${student.studentName}'s parent (${student.contactNumber})`);
+        // FIX #10: student name + parent phone number no longer logged in plaintext
+      if (process.env.NODE_ENV !== 'production') console.log('SMS would be sent for absent student:', student._id.toString());
         attendance.smsStatus = 'not_sent';
         await attendance.save();
       }

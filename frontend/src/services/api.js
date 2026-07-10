@@ -1,18 +1,32 @@
 import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://vidhyaplus-api.onrender.com/api';
+
+// FIX #6: no more Authorization header built from a localStorage token — the
+// browser now sends the httpOnly 'token' cookie automatically. withCredentials
+// is required for the browser to include cookies on cross-origin requests.
 const api = axios.create({
   baseURL: API_URL,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json'
   }
 });
 
+// FIX #14: read the (non-httpOnly) CSRF cookie the server sets and echo it back
+// as a header on state-changing requests, per the double-submit pattern.
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? match[2] : null;
+}
+
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (['post', 'put', 'delete'].includes(config.method)) {
+      const csrfToken = getCookie('csrfToken');
+      if (csrfToken) {
+        config.headers['X-CSRF-Token'] = csrfToken;
+      }
     }
     return config;
   },
@@ -25,7 +39,8 @@ api.interceptors.request.use(
 export const authAPI = {
   login: (credentials) => api.post('/auth/login', credentials),
   register: (userData) => api.post('/auth/register', userData),
-  getMe: () => api.get('/auth/me')
+  getMe: () => api.get('/auth/me'),
+  logout: () => api.post('/auth/logout') // FIX #9: invalidates token server-side too
 };
 
 // Students API

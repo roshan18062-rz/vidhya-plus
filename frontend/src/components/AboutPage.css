@@ -21,8 +21,8 @@
 
 .btn-back {
   background: transparent;
-  color: #667eea;
-  border: 2px solid #667eea;
+  color: #E2992C;
+  border: 2px solid #E2992C;
   padding: 0.6rem 1.5rem;
   border-radius: 5px;
   cursor: pointer;
@@ -31,13 +31,13 @@
 }
 
 .btn-back:hover {
-  background: #667eea;
+  background: #E2992C;
   color: white;
 }
 
 /* Hero Section */
 .about-hero {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1C2230 0%, #2F4A3D 100%);
   padding: 5rem 2rem;
   text-align: center;
   color: white;
@@ -63,12 +63,12 @@
 /* Story Section */
 .story-section {
   padding: 5rem 2rem;
-  background: #f8f9fa;
+  background: #F6F1E4;
 }
 
 .story-section h2 {
   font-size: 2.5rem;
-  color: #333;
+  color: #1C2230;
   margin-bottom: 2rem;
   text-align: center;
 }
@@ -81,12 +81,12 @@
 .story-content p {
   font-size: 1.2rem;
   line-height: 1.8;
-  color: #666;
+  color: #4B5165;
   margin-bottom: 1.5rem;
 }
 
 .story-content strong {
-  color: #667eea;
+  color: #E2992C;
 }
 
 /* Developer Section */
@@ -112,7 +112,7 @@
   width: 250px;
   height: 250px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1C2230 0%, #2F4A3D 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -131,8 +131,8 @@
 }
 
 .social-btn {
-  background: #f8f9fa;
-  border: 2px solid #e3e8ef;
+  background: #F6F1E4;
+  border: 2px solid #EFE7D3;
   padding: 0.8rem 1.5rem;
   border-radius: 8px;
   cursor: pointer;
@@ -145,20 +145,20 @@
 }
 
 .social-btn:hover {
-  background: #667eea;
+  background: #E2992C;
   color: white;
-  border-color: #667eea;
+  border-color: #E2992C;
   transform: translateY(-2px);
 }
 
 .developer-details h2 {
   font-size: 2.5rem;
-  color: #333;
+  color: #1C2230;
   margin-bottom: 0.5rem;
 }
 
 .role {
-  color: #667eea;
+  color: #E2992C;
   font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 2rem;
@@ -167,7 +167,7 @@
 .bio p {
   font-size: 1.1rem;
   line-height: 1.8;
-  color: #666;
+  color: #4B5165;
   margin-bottom: 1.5rem;
 }
 
@@ -177,7 +177,7 @@
 }
 
 .skills-section h3 {
-  color: #333;
+  color: #1C2230;
   margin-bottom: 1.5rem;
   font-size: 1.5rem;
 }
@@ -192,9 +192,9 @@
   display: flex;
   gap: 1rem;
   padding: 1.5rem;
-  background: #f8f9fa;
+  background: #F6F1E4;
   border-radius: 10px;
-  border-left: 4px solid #667eea;
+  border-left: 4px solid #E2992C;
 }
 
 .skill-icon {
@@ -203,12 +203,12 @@
 
 .skill-item strong {
   display: block;
-  color: #333;
+  color: #1C2230;
   margin-bottom: 0.3rem;
 }
 
 .skill-item p {
-  color: #666;
+  color: #4B5165;
   font-size: 0.9rem;
   margin: 0;
 }
@@ -224,7 +224,7 @@
 .achievement-item {
   text-align: center;
   padding: 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1C2230 0%, #2F4A3D 100%);
   border-radius: 10px;
   color: white;
 }
@@ -242,7 +242,7 @@
 /* Vision Section */
 .vision-section {
   padding: 5rem 2rem;
-  background: #f8f9fa;
+  background: #F6F1E4;
 }
 
 .vision-grid {
@@ -266,13 +266,13 @@
 }
 
 .vision-card h3 {
-  color: #333;
+  color: #1C2230;
   margin-bottom: 1rem;
   font-size: 1.5rem;
 }
 
 .vision-card p {
-  color: #666;
+  color: #4B5165;
   line-height: 1.6;
 }
 
@@ -284,14 +284,14 @@
 
 .solo-dev-section h2 {
   font-size: 2.5rem;
-  color: #333;
+  color: #1C2230;
   text-align: center;
   margin-bottom: 1rem;
 }
 
 .section-subtitle {
   text-align: center;
-  color: #666;
+  color: #4B5165;
   font-size: 1.1rem;
   margin-bottom: 3rem;
 }
@@ -305,9 +305,9 @@
 
 .advantage-card {
   padding: 2rem;
-  background: #f8f9fa;
+  background: #F6F1E4;
   border-radius: 10px;
-  border-left: 4px solid #667eea;
+  border-left: 4px solid #E2992C;
 }
 
 .advantage-number {
@@ -319,24 +319,24 @@
 }
 
 .advantage-card h3 {
-  color: #333;
+  color: #1C2230;
   margin-bottom: 1rem;
 }
 
 .advantage-card p {
-  color: #666;
+  color: #4B5165;
   line-height: 1.6;
 }
 
 /* Tech Stack Section */
 .tech-stack-section {
   padding: 5rem 2rem;
-  background: #f8f9fa;
+  background: #F6F1E4;
 }
 
 .tech-stack-section h2 {
   font-size: 2.5rem;
-  color: #333;
+  color: #1C2230;
   text-align: center;
   margin-bottom: 1rem;
 }
@@ -356,7 +356,7 @@
 }
 
 .tech-card h4 {
-  color: #667eea;
+  color: #E2992C;
   margin-bottom: 1.5rem;
   font-size: 1.3rem;
 }
@@ -368,8 +368,8 @@
 
 .tech-card li {
   padding: 0.5rem 0;
-  color: #666;
-  border-bottom: 1px solid #f0f0f0;
+  color: #4B5165;
+  border-bottom: 1px solid #EFE7D3;
 }
 
 .tech-card li:last-child {
@@ -384,7 +384,7 @@
 
 .contact-section h2 {
   font-size: 2.5rem;
-  color: #333;
+  color: #1C2230;
   text-align: center;
   margin-bottom: 1rem;
 }
@@ -399,7 +399,7 @@
 .contact-card {
   text-align: center;
   padding: 2rem;
-  background: #f8f9fa;
+  background: #F6F1E4;
   border-radius: 10px;
 }
 
@@ -410,17 +410,17 @@
 }
 
 .contact-card h3 {
-  color: #333;
+  color: #1C2230;
   margin-bottom: 0.5rem;
 }
 
 .contact-card p {
-  color: #666;
+  color: #4B5165;
   margin-bottom: 1.5rem;
 }
 
 .contact-btn {
-  background: #667eea;
+  background: #E2992C;
   color: white;
   border: none;
   padding: 0.8rem 1.5rem;
@@ -430,13 +430,13 @@
 }
 
 .contact-btn:hover {
-  background: #5568d3;
+  background: #C97F1B;
   transform: translateY(-2px);
 }
 
 /* CTA Section */
 .about-cta {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1C2230 0%, #2F4A3D 100%);
   padding: 5rem 2rem;
   text-align: center;
   color: white;
@@ -459,8 +459,8 @@
 }
 
 .btn-primary-cta {
-  background: #ffd700;
-  color: #333;
+  background: #E2992C;
+  color: #1C2230;
   border: none;
   padding: 1rem 2.5rem;
   border-radius: 5px;
@@ -471,7 +471,7 @@
 }
 
 .btn-primary-cta:hover {
-  background: #ffed4e;
+  background: #F0B85C;
   transform: translateY(-3px);
 }
 
@@ -489,13 +489,13 @@
 
 .btn-secondary-cta:hover {
   background: white;
-  color: #667eea;
+  color: #E2992C;
 }
 
 /* Footer */
 .about-footer {
-  background: #2d3748;
-  color: #cbd5e0;
+  background: #1C2230;
+  color: #C9A227;
   padding: 2rem;
   text-align: center;
 }

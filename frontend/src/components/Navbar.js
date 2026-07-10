@@ -6,8 +6,8 @@ function Navbar({ user, onLogout }) {
     <nav className="navbar">
       <div className="navbar-brand">
         <h2>
-          <span style={{color: '#667eea', fontWeight: 700}}>Vidhya</span>
-          <span style={{color: '#ffd700', fontWeight: 900}}>+</span>
+          <span>Vidhya</span>
+          <span>+</span>
         </h2>
         <span className="institute-code">{user?.instituteCode}</span>
       </div>

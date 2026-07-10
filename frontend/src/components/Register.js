@@ -68,8 +68,8 @@ function Register() {
     <div className="register-container">
       <div className="register-box">
 <h1>
-          <span style={{color: '#667eea', fontWeight: 700}}>Vidhya</span>
-          <span style={{color: '#ffd700', fontWeight: 900}}>+</span>
+          <span style={{color: '#1C2230', fontWeight: 700}}>Vidhya</span>
+          <span style={{color: '#E2992C', fontWeight: 900}}>+</span>
         </h1>        <p className="subtitle">Start managing your classes today - Free 30 days trial!</p>
 
         <form onSubmit={handleSubmit}>

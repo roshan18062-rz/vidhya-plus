@@ -10,31 +10,46 @@ import StudentManagement from './components/StudentManagement';
 import Attendance from './components/Attendance';
 import FeeManagement from './components/FeeManagement';
 import Navbar from './components/Navbar';
+import { authAPI } from './services/api';
 import './App.css';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
 
+  // FIX #6: the JWT itself is never in localStorage anymore (lives in an httpOnly
+  // cookie the browser sends automatically). 'user' here is just display data
+  // (name/role/etc), not a credential, so keeping it in localStorage is fine.
+  // We confirm the session is actually still valid server-side via /auth/me
+  // rather than trusting local state alone.
   useEffect(() => {
-    const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
-    
-    if (token && userData) {
-      setIsAuthenticated(true);
-      setUser(JSON.parse(userData));
+    if (userData) {
+      authAPI.getMe()
+        .then(() => {
+          setIsAuthenticated(true);
+          setUser(JSON.parse(userData));
+        })
+        .catch(() => {
+          localStorage.removeItem('user');
+          setIsAuthenticated(false);
+          setUser(null);
+        });
     }
   }, []);
 
-  const handleLogin = (token, userData) => {
-    localStorage.setItem('token', token);
+  const handleLogin = (userData) => {
     localStorage.setItem('user', JSON.stringify(userData));
     setIsAuthenticated(true);
     setUser(userData);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
+  const handleLogout = async () => {
+    try {
+      await authAPI.logout(); // FIX #9: revoke server-side (bumps tokenVersion)
+    } catch (e) {
+      // even if the network call fails, still clear local state below
+    }
     localStorage.removeItem('user');
     setIsAuthenticated(false);
     setUser(null);

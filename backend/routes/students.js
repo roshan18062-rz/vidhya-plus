@@ -1,9 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const Student = require('../models/Student');
-const { authMiddleware } = require('../middleware/auth');
+const { authMiddleware, requireRole } = require('../middleware/auth');
 
 router.use(authMiddleware);
+
+// FIX #2: escape regex metacharacters so user input can't build a catastrophic-backtracking pattern (ReDoS)
+function escapeRegex(str) {
+  return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
 // @route   GET /api/students
 // @desc    Get all students for the institute (with pagination)
@@ -26,10 +31,12 @@ router.get('/', async (req, res) => {
     if (status) query.status = status;
     
     if (search) {
+      // FIX #2: was `{ $regex: search }` raw — escaped + length-capped now
+      const safeSearch = escapeRegex(search).slice(0, 100);
       query.$or = [
-        { studentName: { $regex: search, $options: 'i' } },
-        { studentId: { $regex: search, $options: 'i' } },
-        { parentName: { $regex: search, $options: 'i' } }
+        { studentName: { $regex: safeSearch, $options: 'i' } },
+        { studentId: { $regex: safeSearch, $options: 'i' } },
+        { parentName: { $regex: safeSearch, $options: 'i' } }
       ];
     }
 
@@ -128,7 +135,8 @@ router.post('/', async (req, res) => {
     // Generate ID with 4-digit padding
     const studentId = `${req.user.instituteCode}-${String(nextNumber).padStart(4, '0')}`;
 
-    console.log(`✅ Creating student with ID: ${studentId}`);
+    // FIX #10: debug-only, no PII
+    if (process.env.NODE_ENV !== 'production') console.log('Creating student with ID:', studentId);
 
     const student = new Student({
       studentId,
@@ -146,7 +154,8 @@ router.post('/', async (req, res) => {
 
     await student.save();
     
-    console.log(`✅ Student created successfully: ${studentId} - ${studentName}`);
+    // FIX #10: debug-only, no student name in logs
+    if (process.env.NODE_ENV !== 'production') console.log('Student created successfully:', studentId);
     
     res.status(201).json(student);
   } catch (error) {
@@ -169,9 +178,17 @@ router.post('/', async (req, res) => {
 // @access  Private (Teacher only)
 router.put('/:id', async (req, res) => {
   try {
+    // FIX #3: whitelist updatable fields instead of `$set: req.body` (was mass-assignable,
+    // including instituteId — allowed re-parenting a student to a different tenant)
+    const ALLOWED_FIELDS = ['studentName', 'class', 'boardType', 'parentName', 'contactNumber', 'email', 'monthlyFee', 'studentPhoto', 'status'];
+    const updates = {};
+    for (const key of ALLOWED_FIELDS) {
+      if (req.body[key] !== undefined) updates[key] = req.body[key];
+    }
+
     const student = await Student.findOneAndUpdate(
       { _id: req.params.id, instituteId: req.user.instituteId },
-      { $set: req.body },
+      { $set: updates },
       { new: true, runValidators: true }
     );
 
@@ -189,7 +206,8 @@ router.put('/:id', async (req, res) => {
 // @route   DELETE /api/students/:id
 // @desc    Mark student as inactive
 // @access  Private (Teacher only)
-router.delete('/:id', async (req, res) => {
+// FIX #4: only 'owner' role can delete/deactivate a student record
+router.delete('/:id', requireRole('owner'), async (req, res) => {
   try {
     const student = await Student.findOneAndUpdate(
       { _id: req.params.id, instituteId: req.user.instituteId },

@@ -16,8 +16,8 @@ function AboutPage() {
         <div className="nav-container">
           <div className="logo" onClick={() => navigate('/')}>
             <h2>
-              <span style={{color: '#667eea', fontWeight: 700}}>Vidhya</span>
-              <span style={{color: '#ffd700', fontWeight: 900}}>+</span>
+              <span style={{color: '#1C2230', fontWeight: 700}}>Vidhya</span>
+              <span style={{color: '#E2992C', fontWeight: 900}}>+</span>
             </h2>
           </div>
           <button onClick={() => navigate('/')} className="btn-back">

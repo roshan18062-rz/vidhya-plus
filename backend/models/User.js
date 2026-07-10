@@ -31,6 +31,11 @@ const UserSchema = new mongoose.Schema({
     ref: 'Institute',
     required: true
   },
+  // FIX #9: bump on logout/password-change to revoke all previously-issued JWTs
+  tokenVersion: {
+    type: Number,
+    default: 0
+  },
   createdAt: {
     type: Date,
     default: Date.now

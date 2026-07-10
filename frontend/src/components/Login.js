@@ -25,7 +25,9 @@ function Login({ onLogin }) {
 
     try {
       const response = await authAPI.login(credentials);
-      onLogin(response.data.token, response.data.user);
+      // FIX #6: server no longer returns the JWT in the response body — it's
+      // set as an httpOnly cookie instead, so there's nothing to pass here.
+      onLogin(response.data.user);
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     } finally {
@@ -37,11 +39,11 @@ function Login({ onLogin }) {
     <div className="login-container">
       <div className="login-box">
         <h1>
-          <span style={{color: '#667eea', fontWeight: 700}}>Vidhya</span>
-          <span style={{color: '#ffd700', fontWeight: 900}}>+</span>
+          <span style={{color: '#1C2230', fontWeight: 700}}>Vidhya</span>
+          <span style={{color: '#E2992C', fontWeight: 900}}>+</span>
         </h1>
         <h2>Login to Your Institute</h2>
-        <p style={{textAlign: 'center', color: '#999', fontSize: '0.9rem', marginBottom: '2rem'}}>
+        <p style={{textAlign: 'center', color: '#8B8FA3', fontSize: '0.9rem', marginBottom: '2rem'}}>
           Knowledge. Enhanced.
         </p>
         
