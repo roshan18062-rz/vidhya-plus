@@ -10,11 +10,11 @@ function Attendance() {
 
   useEffect(() => {
     fetchStudents();
-  }, [classFilter]);
+  }, [classFilter]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     fetchAttendanceForDate();
-  }, [selectedDate, students]);
+  }, [selectedDate, students]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchStudents = async () => {
     try {

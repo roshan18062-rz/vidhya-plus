@@ -45,7 +45,7 @@ function StudentManagement() {
 
   useEffect(() => {
     fetchStudents();
-  }, [filters, pagination.page]);
+  }, [filters, pagination.page]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchStudents = async () => {
     setLoading(true);
@@ -84,6 +84,7 @@ function StudentManagement() {
   };
 
   // Vanilla JS debounced search
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSearch = useCallback(
     debounce((searchTerm) => {
       setFilters(prev => ({ ...prev, search: searchTerm }));

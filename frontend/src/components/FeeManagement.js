@@ -19,14 +19,14 @@ function FeeManagement() {
     fetchPendingFees();
     fetchFeeStats();
     fetchPaidStudents(); // ✅ NEW
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ✅ Refetch when month changes
   useEffect(() => {
     fetchPaidStudents();
     fetchPendingFees();
     fetchFeeStats();
-  }, [paymentData.monthYear]);
+  }, [paymentData.monthYear]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchStudents = async () => {
     try {

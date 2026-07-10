@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { authAPI } from '../services/api';
-import { useNavigate } from 'react-router-dom';
 
 function Login({ onLogin }) {
-  const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
     email: '',
     password: ''
