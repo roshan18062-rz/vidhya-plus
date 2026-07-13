@@ -12,10 +12,20 @@ const crypto = require('crypto');
 //      to match the 'csrfToken' cookie. A cross-site attacker page can trigger
 //      the cookie to be sent automatically, but cannot read it (browser same-
 //      origin policy) to also set the matching header — so forged requests fail.
+//
+// BUG FIX: this app's frontend (Vercel) and backend (Render) live on entirely
+// different domains, not just different ports — a genuinely cross-site setup.
+// sameSite: 'strict' blocks a cookie from being sent on cross-site requests at
+// all, so the browser never sent this cookie back, and every request looked
+// like it was "missing" a CSRF token. sameSite: 'none' (paired with
+// secure: true, which cross-site cookies require) is the correct setting here.
+// 'lax' is used in non-production so local dev over plain http still works,
+// since 'none' requires HTTPS.
 
 const CSRF_COOKIE = 'csrfToken';
 const CSRF_HEADER = 'x-csrf-token';
 const SAFE_METHODS = ['GET', 'HEAD', 'OPTIONS'];
+const isProd = process.env.NODE_ENV === 'production';
 
 const csrfProtection = (req, res, next) => {
   let token = req.cookies?.[CSRF_COOKIE];
@@ -24,8 +34,8 @@ const csrfProtection = (req, res, next) => {
     token = crypto.randomBytes(32).toString('hex');
     res.cookie(CSRF_COOKIE, token, {
       httpOnly: false, // frontend JS needs to read this one
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
   }
