@@ -122,18 +122,12 @@
 }
 
 .hero-content {
-  animation: hero-rise 0.7s ease both;
+  /* entrance animation now handled by motion (staggerContainer) in JS */
 }
 
 .hero-visual {
-  animation: hero-rise 0.7s ease 0.15s both;
   display: flex;
   justify-content: center;
-}
-
-@keyframes hero-rise {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .hero-eyebrow {
@@ -243,9 +237,9 @@
   width: 100%;
   max-width: 340px;
   box-shadow: var(--shadow-lg);
-  transform: rotate(2deg);
   position: relative;
   border: 1px solid rgba(28, 34, 48, 0.08);
+  cursor: default;
 }
 
 .register-card::before {
@@ -461,12 +455,12 @@
   border: 1px solid rgba(246, 241, 228, 0.15);
   border-radius: var(--r-md);
   padding: 1.9rem;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: background 0.2s ease;
+  cursor: default;
 }
 
 .why-card:hover {
   background: rgba(246, 241, 228, 0.1);
-  transform: translateY(-2px);
 }
 
 .why-card h3 {

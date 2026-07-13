@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import { authAPI } from '../services/api';
+import TiltCard from './ui/TiltCard';
+import { motionTokens, springs } from '../lib/motion-tokens';
 
 function Login({ onLogin }) {
   const [credentials, setCredentials] = useState({
@@ -35,7 +38,12 @@ function Login({ onLogin }) {
 
   return (
     <div className="login-container">
-      <div className="login-box">
+      <motion.div
+        initial={{ opacity: 0, y: motionTokens.distance.lg }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={springs.gentle}
+      >
+        <TiltCard className="login-box" maxTilt={4}>
         <h1>
           <span style={{color: '#1C2230', fontWeight: 700}}>Vidhya</span>
           <span style={{color: '#E2992C', fontWeight: 900}}>+</span>
@@ -72,9 +80,16 @@ function Login({ onLogin }) {
           
           {error && <div className="error-message">{error}</div>}
           
-          <button type="submit" className="btn-primary btn-large" disabled={loading}>
+          <motion.button
+            type="submit"
+            className="btn-primary btn-large"
+            disabled={loading}
+            whileHover={{ scale: loading ? 1 : motionTokens.scale.pop }}
+            whileTap={{ scale: loading ? 1 : motionTokens.scale.press }}
+            transition={springs.snappy}
+          >
             {loading ? 'Logging in...' : 'Login'}
-          </button>
+          </motion.button>
         </form>
 
         <div className="register-link">
@@ -84,7 +99,8 @@ function Login({ onLogin }) {
         <div className="demo-info">
           <p>✨ <strong>New Here?</strong> Register your tuition institute and get 30 days free trial!</p>
         </div>
-      </div>
+        </TiltCard>
+      </motion.div>
     </div>
   );
 }

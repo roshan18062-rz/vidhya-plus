@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
 import { studentsAPI, attendanceAPI, feesAPI } from '../services/api';
+import TiltCard from './ui/TiltCard';
+import { motionTokens, springs } from '../lib/motion-tokens';
+
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+};
+
+const staggerItem = {
+  hidden: { opacity: 0, y: motionTokens.distance.md },
+  visible: { opacity: 1, y: 0, transition: springs.gentle },
+};
 
 function Dashboard({ user }) {
   const [stats, setStats] = useState({
@@ -57,60 +70,96 @@ function Dashboard({ user }) {
         )}
       </div>
       
-      <div className="dashboard-grid">
+      <motion.div
+        className="dashboard-grid"
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+      >
         {/* Students Stats */}
-        <div className="card">
-          <h3>👨‍🎓 Total Students</h3>
-          <div className="stat-number">{stats.students.totalStudents}</div>
-          <div className="stat-details">
-            <p>CBSE: {stats.students.boardWise.CBSE || 0}</p>
-            <p>ICSE: {stats.students.boardWise.ICSE || 0}</p>
-            <p>State: {stats.students.boardWise['State Board'] || 0}</p>
-          </div>
-        </div>
+        <motion.div variants={staggerItem}>
+          <TiltCard className="card" maxTilt={5}>
+            <h3>👨‍🎓 Total Students</h3>
+            <div className="stat-number">{stats.students.totalStudents}</div>
+            <div className="stat-details">
+              <p>CBSE: {stats.students.boardWise.CBSE || 0}</p>
+              <p>ICSE: {stats.students.boardWise.ICSE || 0}</p>
+              <p>State: {stats.students.boardWise['State Board'] || 0}</p>
+            </div>
+          </TiltCard>
+        </motion.div>
 
         {/* Today's Attendance */}
-        <div className="card">
-          <h3>📅 Today's Attendance</h3>
-          <div className="stat-number">
-            {stats.attendance.present}/{stats.attendance.total}
-          </div>
-          <div className="stat-details">
-            <p className="text-success">Present: {stats.attendance.present}</p>
-            <p className="text-danger">Absent: {stats.attendance.absent}</p>
-            <p className="text-warning">Not Marked: {stats.attendance.notMarked}</p>
-          </div>
-        </div>
+        <motion.div variants={staggerItem}>
+          <TiltCard className="card" maxTilt={5}>
+            <h3>📅 Today's Attendance</h3>
+            <div className="stat-number">
+              {stats.attendance.present}/{stats.attendance.total}
+            </div>
+            <div className="stat-details">
+              <p className="text-success">Present: {stats.attendance.present}</p>
+              <p className="text-danger">Absent: {stats.attendance.absent}</p>
+              <p className="text-warning">Not Marked: {stats.attendance.notMarked}</p>
+            </div>
+          </TiltCard>
+        </motion.div>
 
         {/* Fee Collection */}
-        <div className="card">
-          <h3>💰 This Month's Fees</h3>
-          <div className="stat-number">₹{stats.fees.totalCollected}</div>
-          <div className="stat-details">
-            <p className="text-success">Paid: {stats.fees.paidCount}</p>
-            <p className="text-danger">Pending: {stats.fees.pendingCount}</p>
-          </div>
-        </div>
+        <motion.div variants={staggerItem}>
+          <TiltCard className="card" maxTilt={5}>
+            <h3>💰 This Month's Fees</h3>
+            <div className="stat-number">₹{stats.fees.totalCollected}</div>
+            <div className="stat-details">
+              <p className="text-success">Paid: {stats.fees.paidCount}</p>
+              <p className="text-danger">Pending: {stats.fees.pendingCount}</p>
+            </div>
+          </TiltCard>
+        </motion.div>
 
         {/* Quick Actions */}
-        <div className="card">
-          <h3>⚡ Quick Actions</h3>
-          <div className="quick-actions">
-            <button className="btn-action" onClick={() => window.location.href = '/students'}>
-              Add Student
-            </button>
-            <button className="btn-action" onClick={() => window.location.href = '/attendance'}>
-              Mark Attendance
-            </button>
-            <button className="btn-action" onClick={() => window.location.href = '/fees'}>
-              Record Payment
-            </button>
-          </div>
-        </div>
-      </div>
+        <motion.div variants={staggerItem}>
+          <TiltCard className="card" maxTilt={5}>
+            <h3>⚡ Quick Actions</h3>
+            <div className="quick-actions">
+              <motion.button
+                className="btn-action"
+                onClick={() => window.location.href = '/students'}
+                whileHover={{ scale: motionTokens.scale.pop }}
+                whileTap={{ scale: motionTokens.scale.press }}
+                transition={springs.snappy}
+              >
+                Add Student
+              </motion.button>
+              <motion.button
+                className="btn-action"
+                onClick={() => window.location.href = '/attendance'}
+                whileHover={{ scale: motionTokens.scale.pop }}
+                whileTap={{ scale: motionTokens.scale.press }}
+                transition={springs.snappy}
+              >
+                Mark Attendance
+              </motion.button>
+              <motion.button
+                className="btn-action"
+                onClick={() => window.location.href = '/fees'}
+                whileHover={{ scale: motionTokens.scale.pop }}
+                whileTap={{ scale: motionTokens.scale.press }}
+                transition={springs.snappy}
+              >
+                Record Payment
+              </motion.button>
+            </div>
+          </TiltCard>
+        </motion.div>
+      </motion.div>
 
       {/* Institute Info Card */}
-      <div className="institute-info-card">
+      <motion.div
+        className="institute-info-card"
+        initial={{ opacity: 0, y: motionTokens.distance.md }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ ...springs.gentle, delay: 0.3 }}
+      >
         <h3>🏫 Institute Information</h3>
         <div className="info-grid">
           <div className="info-item">
@@ -128,7 +177,7 @@ function Dashboard({ user }) {
             <span className="info-value">{user?.email}</span>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

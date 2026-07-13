@@ -550,12 +550,11 @@ body {
   border-radius: var(--r-md);
   box-shadow: var(--shadow-sm);
   border: 1px solid rgba(28, 34, 48, 0.05);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition: box-shadow 0.2s ease;
 }
 
 .card:hover {
   box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
 }
 
 .card h3 {

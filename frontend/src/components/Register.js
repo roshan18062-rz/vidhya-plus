@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import { authAPI } from '../services/api';
 import { useNavigate } from 'react-router-dom';
+import { motionTokens, springs } from '../lib/motion-tokens';
 
 function Register() {
   const navigate = useNavigate();
@@ -36,8 +38,13 @@ function Register() {
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+    if (formData.password.length < 10) {
+      setError('Password must be at least 10 characters, with an uppercase letter, a lowercase letter, and a number');
+      return;
+    }
+
+    if (!/[a-z]/.test(formData.password) || !/[A-Z]/.test(formData.password) || !/[0-9]/.test(formData.password)) {
+      setError('Password must include an uppercase letter, a lowercase letter, and a number');
       return;
     }
 
@@ -66,7 +73,12 @@ function Register() {
 
   return (
     <div className="register-container">
-      <div className="register-box">
+      <motion.div
+        className="register-box"
+        initial={{ opacity: 0, y: motionTokens.distance.lg }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={springs.gentle}
+      >
 <h1>
           <span style={{color: '#1C2230', fontWeight: 700}}>Vidhya</span>
           <span style={{color: '#E2992C', fontWeight: 900}}>+</span>
@@ -163,8 +175,8 @@ function Register() {
                   value={formData.password}
                   onChange={handleChange}
                   required
-                  minLength="6"
-                  placeholder="Min 6 characters"
+                  minLength="10"
+                  placeholder="Min 10 chars, incl. upper, lower & number"
                 />
               </div>
 
@@ -185,15 +197,22 @@ function Register() {
           {error && <div className="error-message">{error}</div>}
           {success && <div className="success-message">{success}</div>}
 
-          <button type="submit" className="btn-primary btn-large" disabled={loading}>
+          <motion.button
+            type="submit"
+            className="btn-primary btn-large"
+            disabled={loading}
+            whileHover={{ scale: loading ? 1 : motionTokens.scale.pop }}
+            whileTap={{ scale: loading ? 1 : motionTokens.scale.press }}
+            transition={springs.snappy}
+          >
             {loading ? 'Registering...' : '🚀 Register Institute'}
-          </button>
+          </motion.button>
         </form>
 
         <div className="login-link">
           Already have an account? <a href="/login">Login here</a>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
