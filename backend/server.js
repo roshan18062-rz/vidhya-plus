@@ -13,6 +13,15 @@ dotenv.config();
 const app = express();
 connectDB();
 
+// FIX: Render (and most PaaS hosts) terminate TLS at a proxy and forward
+// plain HTTP internally with an X-Forwarded-Proto header. Without this,
+// req.secure is always false even on a live HTTPS request — which silently
+// broke the sameSite:'none' cookie logic below (it was gated on NODE_ENV
+// instead, which Render doesn't set by default either) and would also make
+// express-rate-limit key everything off the proxy's IP instead of the real
+// client IP.
+app.set('trust proxy', 1);
+
 // FIX #11: security headers
 app.use(helmet());
 

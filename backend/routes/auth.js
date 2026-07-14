@@ -159,13 +159,13 @@ router.post('/login', [
     // FIX #6: token set as an httpOnly cookie instead of returned in the JSON body
     // for the frontend to store in localStorage. Not readable by JS -> not
     // stealable by an XSS payload.
-    // sameSite: 'none' (not 'strict') because frontend (Vercel) and backend
-    // (Render) are different domains — see middleware/csrf.js for the full
-    // explanation, same underlying bug applied here too.
+    // req.secure (not NODE_ENV) decides sameSite/secure here — reliable behind
+    // Render's proxy once 'trust proxy' is set in server.js, whereas NODE_ENV
+    // isn't guaranteed to be set to 'production' by every host.
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: req.secure,
+      sameSite: req.secure ? 'none' : 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 

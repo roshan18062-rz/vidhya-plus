@@ -25,17 +25,20 @@ const crypto = require('crypto');
 const CSRF_COOKIE = 'csrfToken';
 const CSRF_HEADER = 'x-csrf-token';
 const SAFE_METHODS = ['GET', 'HEAD', 'OPTIONS'];
-const isProd = process.env.NODE_ENV === 'production';
 
 const csrfProtection = (req, res, next) => {
   let token = req.cookies?.[CSRF_COOKIE];
 
   if (!token) {
     token = crypto.randomBytes(32).toString('hex');
+    // req.secure only reports true correctly here because server.js sets
+    // 'trust proxy' — otherwise it's always false behind Render's proxy,
+    // even on real HTTPS traffic, and this silently falls back to 'lax'
+    // (which cross-site requests won't carry the cookie under anyway).
     res.cookie(CSRF_COOKIE, token, {
       httpOnly: false, // frontend JS needs to read this one
-      secure: isProd,
-      sameSite: isProd ? 'none' : 'lax',
+      secure: req.secure,
+      sameSite: req.secure ? 'none' : 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
   }
