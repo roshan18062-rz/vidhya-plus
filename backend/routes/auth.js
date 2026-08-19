@@ -98,6 +98,14 @@ router.post('/register', [
 
   } catch (error) {
     console.error('Registration error:', error);
+
+    // FIX: Handle duplicate email (Institute unique index) or duplicate username (User unique index)
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyPattern)[0];
+      const fieldLabel = field === 'email' ? 'Email' : field === 'username' ? 'Username' : field;
+      return res.status(409).json({ message: `${fieldLabel} already registered` });
+    }
+
     res.status(500).json({ message: 'Server error during registration' });
   }
 });
