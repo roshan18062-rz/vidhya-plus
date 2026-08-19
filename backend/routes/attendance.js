@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { body, validationResult } = require('express-validator');
 const Attendance = require('../models/Attendance');
 const Student = require('../models/Student');
 const { authMiddleware } = require('../middleware/auth');
@@ -11,8 +12,17 @@ router.use(authMiddleware);
 // @route   POST /api/attendance
 // @desc    Mark attendance
 // @access  Private (Teacher only)
-router.post('/', async (req, res) => {
+router.post('/', [
+  body('studentId').isMongoId().withMessage('Invalid student ID'),
+  body('date').isISO8601().withMessage('Date must be in ISO 8601 format'),
+  body('status').isIn(['present', 'absent', 'late']).withMessage('Status must be present, absent, or late'),
+], async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: 'Validation failed', errors: errors.array() });
+    }
+
     const { studentId, date, status } = req.body;
 
     const student = await Student.findOne({
@@ -50,7 +60,6 @@ router.post('/', async (req, res) => {
 
     // Send SMS if absent (Disabled for MVP)
     if (status === 'absent') {
-      // FIX #10: student name + parent phone number no longer logged in plaintext
       if (process.env.NODE_ENV !== 'production') console.log('SMS would be sent for absent student:', student._id.toString());
       attendance.smsStatus = 'not_sent';
       await attendance.save();
@@ -66,8 +75,18 @@ router.post('/', async (req, res) => {
 // @route   POST /api/attendance/bulk
 // @desc    Mark bulk attendance
 // @access  Private (Teacher only)
-router.post('/bulk', async (req, res) => {
+router.post('/bulk', [
+  body('date').isISO8601().withMessage('Date must be in ISO 8601 format'),
+  body('attendanceData').isArray({ min: 1, max: 500 }).withMessage('attendanceData must be an array of 1-500 items'),
+  body('attendanceData.*.studentId').isMongoId().withMessage('Each entry must have a valid student ID'),
+  body('attendanceData.*.status').isIn(['present', 'absent', 'late']).withMessage('Each status must be present, absent, or late'),
+], async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: 'Validation failed', errors: errors.array() });
+    }
+
     const { date, attendanceData } = req.body;
 
     const dateObj = new Date(date);
@@ -104,10 +123,8 @@ router.post('/bulk', async (req, res) => {
 
       await attendance.save();
 
-      // FIXED: Changed 'status' to 'record.status'
       if (record.status === 'absent') {
-        // FIX #10: student name + parent phone number no longer logged in plaintext
-      if (process.env.NODE_ENV !== 'production') console.log('SMS would be sent for absent student:', student._id.toString());
+        if (process.env.NODE_ENV !== 'production') console.log('SMS would be sent for absent student:', student._id.toString());
         attendance.smsStatus = 'not_sent';
         await attendance.save();
       }
@@ -167,14 +184,14 @@ router.get('/today', async (req, res) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const attendance = await Attendance.find({ 
+    const attendance = await Attendance.find({
       date: today,
       instituteId: req.user.instituteId
     }).populate('studentId', 'studentName studentId class boardType');
 
     const presentCount = attendance.filter(a => a.status === 'present').length;
     const absentCount = attendance.filter(a => a.status === 'absent').length;
-    const totalActive = await Student.countDocuments({ 
+    const totalActive = await Student.countDocuments({
       status: 'active',
       instituteId: req.user.instituteId
     });

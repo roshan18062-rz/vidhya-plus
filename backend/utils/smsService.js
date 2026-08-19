@@ -3,15 +3,20 @@ const axios = require('axios');
 // Fast2SMS Configuration
 const FAST2SMS_API_KEY = process.env.FAST2SMS_API_KEY;
 
+// FIX: Mask phone number for safe logging (e.g. 1234567890 -> 123****890)
+function maskPhone(phone) {
+  if (!phone || phone.length < 4) return '***';
+  return phone.slice(0, 3) + '****' + phone.slice(-3);
+}
+
 // Send SMS using Fast2SMS
 const sendSMS = async (phoneNumber, message) => {
   try {
-    // Fast2SMS API endpoint
     const response = await axios.post(
       'https://www.fast2sms.com/dev/bulkV2',
       {
         route: 'v3',
-        sender_id: 'TXTIND', // Default sender ID
+        sender_id: 'TXTIND',
         message: message,
         language: 'english',
         flash: 0,
@@ -25,15 +30,19 @@ const sendSMS = async (phoneNumber, message) => {
       }
     );
 
-    console.log('✅ SMS sent successfully to', phoneNumber);
-    console.log('Response:', response.data);
+    // FIX: Mask phone in logs, restrict detailed logging to non-production
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('SMS sent successfully to', maskPhone(phoneNumber));
+      console.log('Response:', response.data);
+    }
 
     return {
       success: true,
       data: response.data
     };
   } catch (error) {
-    console.error('❌ SMS Error:', error.response?.data || error.message);
+    // FIX: Mask phone in error logs
+    console.error('SMS Error:', maskPhone(phoneNumber), error.response?.data || error.message);
     return {
       success: false,
       error: error.response?.data || error.message
@@ -48,10 +57,13 @@ const sendAbsenceNotification = async (studentName, contactNumber, date, institu
     month: '2-digit',
     year: 'numeric'
   });
-  
+
   const message = `Dear Parent, Your child ${studentName} is absent from ${instituteName} today (${formattedDate}). Please contact us for any queries.`;
-  
-  console.log('📱 Sending absence SMS to:', contactNumber);
+
+  // FIX: Mask phone in logs
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('Sending absence SMS to:', maskPhone(contactNumber));
+  }
   return await sendSMS(contactNumber, message);
 };
 
@@ -61,8 +73,8 @@ const sendTestSMS = async (phoneNumber) => {
   return await sendSMS(phoneNumber, message);
 };
 
-module.exports = { 
-  sendSMS, 
+module.exports = {
+  sendSMS,
   sendAbsenceNotification,
-  sendTestSMS 
+  sendTestSMS
 };

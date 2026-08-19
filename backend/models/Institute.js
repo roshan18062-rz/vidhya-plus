@@ -45,4 +45,7 @@ const InstituteSchema = new mongoose.Schema({
   }
 });
 
+// FIX: Unique index on email to prevent duplicate institutes with same email
+InstituteSchema.index({ email: 1 }, { unique: true });
+
 module.exports = mongoose.model('Institute', InstituteSchema);
