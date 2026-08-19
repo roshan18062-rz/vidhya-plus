@@ -38,9 +38,12 @@ const authMiddleware = async (req, res, next) => {
     }
 
     // Check if institute subscription is active
-    if (user.instituteId.subscriptionStatus === 'inactive') {
-      return res.status(403).json({ 
-        message: 'Institute subscription has expired. Please renew.' 
+    // FIX: defensive null check — if populate fails or data is inconsistent
+    if (!user.instituteId || user.instituteId.subscriptionStatus === 'inactive') {
+      return res.status(403).json({
+        message: !user.instituteId
+          ? 'Institute not found. Please contact support.'
+          : 'Institute subscription has expired. Please renew.'
       });
     }
 
