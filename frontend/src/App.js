@@ -12,20 +12,16 @@ import Attendance from './components/Attendance';
 import FeeManagement from './components/FeeManagement';
 import Navbar from './components/Navbar';
 import { authAPI } from './services/api';
-import { motionTokens } from './lib/motion-tokens';
 import './App.css';
 
-// Page transition pattern (motion-patterns skill): fade + slight rise on
-// enter, fade + slight fall on exit. Every route's element gets wrapped in
-// this so AnimatePresence has a motion child with initial/animate/exit to
-// actually animate — Routes itself is not a motion component.
 function PageTransition({ children }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: motionTokens.distance.sm }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -motionTokens.distance.sm }}
-      transition={{ duration: motionTokens.duration.normal, ease: motionTokens.easing.smooth }}
+      initial={{ opacity: 0, y: 20, rotateX: 3 }}
+      animate={{ opacity: 1, y: 0, rotateX: 0 }}
+      exit={{ opacity: 0, y: -15, rotateX: -3 }}
+      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      style={{ perspective: 1200 }}
     >
       {children}
     </motion.div>
@@ -36,24 +32,12 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
 
-  // FIX #6: the JWT itself is never in localStorage anymore (lives in an httpOnly
-  // cookie the browser sends automatically). 'user' here is just display data
-  // (name/role/etc), not a credential, so keeping it in localStorage is fine.
-  // We confirm the session is actually still valid server-side via /auth/me
-  // rather than trusting local state alone.
   useEffect(() => {
     const userData = localStorage.getItem('user');
     if (userData) {
       authAPI.getMe()
-        .then(() => {
-          setIsAuthenticated(true);
-          setUser(JSON.parse(userData));
-        })
-        .catch(() => {
-          localStorage.removeItem('user');
-          setIsAuthenticated(false);
-          setUser(null);
-        });
+        .then(() => { setIsAuthenticated(true); setUser(JSON.parse(userData)); })
+        .catch(() => { localStorage.removeItem('user'); setIsAuthenticated(false); setUser(null); });
     }
   }, []);
 
@@ -64,11 +48,7 @@ function App() {
   };
 
   const handleLogout = async () => {
-    try {
-      await authAPI.logout(); // FIX #9: revoke server-side (bumps tokenVersion)
-    } catch (e) {
-      // even if the network call fails, still clear local state below
-    }
+    try { await authAPI.logout(); } catch (e) { /* ok */ }
     localStorage.removeItem('user');
     setIsAuthenticated(false);
     setUser(null);
@@ -77,19 +57,12 @@ function App() {
   return (
     <ErrorBoundary>
       <Router>
-        <AppShell
-          isAuthenticated={isAuthenticated}
-          user={user}
-          handleLogin={handleLogin}
-          handleLogout={handleLogout}
-        />
+        <AppShell isAuthenticated={isAuthenticated} user={user} handleLogin={handleLogin} handleLogout={handleLogout} />
       </Router>
     </ErrorBoundary>
   );
 }
 
-// Split out so useLocation() can be called inside the Router context —
-// App() itself renders <Router>, so it can't call router hooks directly.
 function AppShell({ isAuthenticated, user, handleLogin, handleLogout }) {
   const location = useLocation();
 
@@ -99,70 +72,14 @@ function AppShell({ isAuthenticated, user, handleLogin, handleLogout }) {
 
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
-          <Route
-            path="/"
-            element={
-              <PageTransition>
-                {isAuthenticated ? <Navigate to="/dashboard" /> : <LandingPage />}
-              </PageTransition>
-            }
-          />
-
+          <Route path="/" element={<PageTransition>{isAuthenticated ? <Navigate to="/dashboard" /> : <LandingPage />}</PageTransition>} />
           <Route path="/about" element={<PageTransition><AboutPage /></PageTransition>} />
-
-          <Route
-            path="/register"
-            element={
-              <PageTransition>
-                {isAuthenticated ? <Navigate to="/dashboard" /> : <Register />}
-              </PageTransition>
-            }
-          />
-
-          <Route
-            path="/login"
-            element={
-              <PageTransition>
-                {isAuthenticated ? <Navigate to="/dashboard" /> : <Login onLogin={handleLogin} />}
-              </PageTransition>
-            }
-          />
-
-          <Route
-            path="/dashboard"
-            element={
-              <PageTransition>
-                {isAuthenticated ? <Dashboard user={user} /> : <Navigate to="/" />}
-              </PageTransition>
-            }
-          />
-
-          <Route
-            path="/students"
-            element={
-              <PageTransition>
-                {isAuthenticated ? <StudentManagement /> : <Navigate to="/" />}
-              </PageTransition>
-            }
-          />
-
-          <Route
-            path="/attendance"
-            element={
-              <PageTransition>
-                {isAuthenticated ? <Attendance /> : <Navigate to="/" />}
-              </PageTransition>
-            }
-          />
-
-          <Route
-            path="/fees"
-            element={
-              <PageTransition>
-                {isAuthenticated ? <FeeManagement /> : <Navigate to="/" />}
-              </PageTransition>
-            }
-          />
+          <Route path="/register" element={<PageTransition>{isAuthenticated ? <Navigate to="/dashboard" /> : <Register />}</PageTransition>} />
+          <Route path="/login" element={<PageTransition>{isAuthenticated ? <Navigate to="/dashboard" /> : <Login onLogin={handleLogin} />}</PageTransition>} />
+          <Route path="/dashboard" element={<PageTransition>{isAuthenticated ? <Dashboard user={user} /> : <Navigate to="/" />}</PageTransition>} />
+          <Route path="/students" element={<PageTransition>{isAuthenticated ? <StudentManagement /> : <Navigate to="/" />}</PageTransition>} />
+          <Route path="/attendance" element={<PageTransition>{isAuthenticated ? <Attendance /> : <Navigate to="/" />}</PageTransition>} />
+          <Route path="/fees" element={<PageTransition>{isAuthenticated ? <FeeManagement /> : <Navigate to="/" />}</PageTransition>} />
         </Routes>
       </AnimatePresence>
     </div>
