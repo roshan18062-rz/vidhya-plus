@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const { body, validationResult } = require('express-validator');
 const FeePayment = require('../models/FeePayment');
 const Student = require('../models/Student');
+const Counter = require('../models/Counter');
 const { authMiddleware } = require('../middleware/auth');
 
 router.use(authMiddleware);
@@ -9,8 +11,18 @@ router.use(authMiddleware);
 // @route   POST /api/fees
 // @desc    Record fee payment
 // @access  Private (Teacher only)
-router.post('/', async (req, res) => {
+router.post('/', [
+  body('studentId').isMongoId().withMessage('Invalid student ID'),
+  body('monthYear').matches(/^\d{4}-\d{2}$/).withMessage('monthYear must be in YYYY-MM format'),
+  body('amount').isFloat({ min: 1, max: 10000000 }).withMessage('Amount must be 1-10,000,000'),
+  body('paymentMode').isIn(['cash', 'upi', 'bank_transfer', 'cheque', 'online']).withMessage('Invalid payment mode'),
+], async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: 'Validation failed', errors: errors.array() });
+    }
+
     const { studentId, monthYear, amount, paymentMode } = req.body;
 
     // Verify student belongs to institute
@@ -23,16 +35,16 @@ router.post('/', async (req, res) => {
       return res.status(404).json({ message: 'Student not found' });
     }
 
-    // ✅ CHECK IF PAYMENT ALREADY EXISTS FOR THIS MONTH
+    // CHECK IF PAYMENT ALREADY EXISTS FOR THIS MONTH
     const existingPayment = await FeePayment.findOne({
       studentId,
       monthYear,
       instituteId: req.user.instituteId,
-      status: 'paid' // Only check paid payments
+      status: 'paid'
     });
 
     if (existingPayment) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         message: `${student.studentName} has already paid fees for ${monthYear}. Receipt #${existingPayment.receiptNumber}`,
         alreadyPaid: true,
         existingPayment: {
@@ -44,9 +56,15 @@ router.post('/', async (req, res) => {
       });
     }
 
-    // Generate receipt number
-    const count = await FeePayment.countDocuments({ instituteId: req.user.instituteId });
-    const receiptNumber = `${req.user.instituteCode}-REC-${new Date().getFullYear()}-${String(count + 1).padStart(5, '0')}`;
+    // FIX: Atomic counter pattern — race-condition-free receipt number generation
+    const year = new Date().getFullYear();
+    const counter = await Counter.findOneAndUpdate(
+      { instituteId: req.user.instituteId, year },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true }
+    );
+
+    const receiptNumber = `${req.user.instituteCode}-REC-${year}-${String(counter.seq).padStart(5, '0')}`;
 
     // Create new payment
     const feePayment = new FeePayment({
@@ -61,7 +79,7 @@ router.post('/', async (req, res) => {
     });
 
     await feePayment.save();
-    
+
     res.status(201).json({
       message: 'Payment recorded successfully',
       payment: feePayment
@@ -100,11 +118,11 @@ router.get('/', async (req, res) => {
 // @access  Private (Teacher only)
 router.get('/pending', async (req, res) => {
   try {
-    const students = await Student.find({ 
+    const students = await Student.find({
       status: 'active',
       instituteId: req.user.instituteId
     });
-    
+
     const currentMonth = new Date().toISOString().slice(0, 7);
 
     const pendingFees = [];
@@ -114,10 +132,9 @@ router.get('/pending', async (req, res) => {
         studentId: student._id,
         monthYear: currentMonth,
         instituteId: req.user.instituteId,
-        status: 'paid' // ✅ Only check paid status
+        status: 'paid'
       });
 
-      // ✅ Only add to pending if NO paid payment exists
       if (!payment) {
         pendingFees.push({
           student,
@@ -149,7 +166,7 @@ router.get('/stats', async (req, res) => {
     });
 
     const totalCollected = paidFees.reduce((sum, fee) => sum + fee.amount, 0);
-    const totalStudents = await Student.countDocuments({ 
+    const totalStudents = await Student.countDocuments({
       status: 'active',
       instituteId: req.user.instituteId
     });
