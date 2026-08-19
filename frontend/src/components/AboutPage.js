@@ -1,330 +1,126 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'motion/react';
+import ScrollReveal from './ui/ScrollReveal';
 import './AboutPage.css';
-
 
 function AboutPage() {
   const navigate = useNavigate();
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  useEffect(() => { window.scrollTo(0, 0); }, []);
 
   return (
-    <div className="about-page">
-      {/* Simple Navigation */}
-      <nav className="about-nav">
-        <div className="nav-container">
-          <div className="logo" onClick={() => navigate('/')}>
-            <h2>
-              <span style={{color: '#1C2230', fontWeight: 700}}>Vidhya</span>
-              <span style={{color: '#E2992C', fontWeight: 900}}>+</span>
-            </h2>
+    <div className="about-3d">
+      <nav className="about-nav-3d glass-strong">
+        <div className="about-nav-inner">
+          <div className="about-logo" onClick={() => navigate('/')} style={{cursor:'pointer'}}>
+            <span className="brand-vidya" style={{fontWeight:700}}>Vidhya</span>
+            <span className="brand-plus" style={{fontWeight:900}}>+</span>
           </div>
-          <button onClick={() => navigate('/')} className="btn-back">
+          <motion.button className="btn-ghost-3d" onClick={() => navigate('/')} whileHover={{scale:1.02}} whileTap={{scale:0.98}}>
             ← Back to Home
-          </button>
+          </motion.button>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="about-hero">
-        <div className="about-hero-content">
-          <h1>About Vidhya+</h1>
-          <p className="about-tagline">Built with passion. Designed for impact.</p>
-        </div>
-      </section>
-
-      {/* Story Section */}
-      <section className="story-section">
-        <div className="content-container">
-          <h2>The Story Behind Vidhya+</h2>
-          <div className="story-content">
-            <p>
-              Every great product starts with a problem. In 2024, while visiting my local 
-              neighborhood, I noticed something that stayed with me - dedicated tutors spending 
-              hours managing attendance registers, fee notebooks, and manually calling parents.
-            </p>
-            <p>
-              These passionate educators were losing precious time on paperwork - time they could 
-              spend teaching. That's when the idea of Vidhya+ was born.
-            </p>
-            <p>
-              My mission was simple: <strong>Give tutors back their time.</strong> Let technology 
-              handle the administrative burden so they can focus on what they do best - educating 
-              the next generation.
-            </p>
+      {/* Hero */}
+      <section className="about-hero-3d">
+        <div className="about-hero-orb" /><div className="about-hero-orb-2" />
+        <ScrollReveal direction="rotateX">
+          <div className="about-hero-content">
+            <h1>About <span className="text-gradient">Vidhya+</span></h1>
+            <p className="about-tagline-3d">Built with passion. Designed for impact.</p>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
-      {/* Developer Section */}
-      <section className="developer-section-about">
-        <div className="content-container">
-          <div className="developer-grid">
-            <div className="developer-photo">
-              <div className="avatar-large">
-                <span className="avatar-text">👨‍💻</span>
-              </div>
-              <div className="social-links">
-                <button className="social-btn">
-                  <span>📧</span> Email
-                </button>
-                <button className="social-btn">
-                  <span>💼</span> LinkedIn
-                </button>
-                <button className="social-btn">
-                  <span>🐙</span> GitHub
-                </button>
+      {/* Story */}
+      <section className="about-section-3d">
+        <ScrollReveal direction="up">
+          <div className="about-section-inner">
+            <span className="section-eyebrow-3d">The Story</span>
+            <h2>The Story Behind Vidhya+</h2>
+            <p>Every great product starts with a problem. In 2024, while visiting my local neighborhood, I noticed something that stayed with me — dedicated tutors spending hours managing attendance registers, fee notebooks, and manually calling parents.</p>
+            <p>These passionate educators were losing precious time on paperwork — time they could spend teaching. That's when the idea of Vidhya+ was born. My mission was simple: <strong>Give tutors back their time.</strong></p>
+          </div>
+        </ScrollReveal>
+      </section>
+
+      {/* Developer */}
+      <section className="about-section-3d">
+        <div className="dev-grid-3d">
+          <ScrollReveal direction="left">
+            <div className="dev-photo-3d card-3d" style={{textAlign:'center'}}>
+              <div className="dev-avatar-3d">R</div>
+              <h3>Roshan</h3>
+              <p>Full Stack Developer</p>
+              <div style={{display:'flex',gap:'0.5rem',justifyContent:'center',marginTop:'1rem'}}>
+                {['Email', 'LinkedIn', 'GitHub'].map(s => (
+                  <motion.button key={s} className="btn-social-3d" whileHover={{scale:1.05,y:-2}} whileTap={{scale:0.95}}>{s}</motion.button>
+                ))}
               </div>
             </div>
-
-            <div className="developer-details">
-              <h2>Meet Roshan</h2>
-              <p className="role">Full Stack Developer & Creator of Vidhya+</p>
-              
-              <div className="bio">
-                <p>
-                  Hi! I'm Roshan, a passionate full-stack developer who believes technology 
-                  should empower people, not complicate their lives. With over 3 years of 
-                  experience building web applications, I've always been drawn to projects 
-                  that make a real difference.
-                </p>
-                <p>
-                  Vidhya+ isn't just another project for me - it's personal. Growing up in India, 
-                  I've seen the impact good tutors have on students' lives. They deserve tools that 
-                  respect their time and enhance their work, not add to their burden.
-                </p>
-              </div>
-
-              <div className="skills-section">
-                <h3>Technical Expertise</h3>
-                <div className="skills-grid">
-                  <div className="skill-item">
-                    <span className="skill-icon">⚛️</span>
-                    <div>
-                      <strong>Frontend</strong>
-                      <p>React.js, JavaScript, HTML/CSS</p>
-                    </div>
-                  </div>
-                  <div className="skill-item">
-                    <span className="skill-icon">🔧</span>
-                    <div>
-                      <strong>Backend</strong>
-                      <p>Node.js, Express.js, REST APIs</p>
-                    </div>
-                  </div>
-                  <div className="skill-item">
-                    <span className="skill-icon">🗄️</span>
-                    <div>
-                      <strong>Database</strong>
-                      <p>MongoDB, MySQL</p>
-                    </div>
-                  </div>
-                  <div className="skill-item">
-                    <span className="skill-icon">🎨</span>
-                    <div>
-                      <strong>Design</strong>
-                      <p>UI/UX, Responsive Design</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="achievements">
-                <div className="achievement-item">
-                  <h4>3+</h4>
-                  <p>Years Experience</p>
-                </div>
-                <div className="achievement-item">
-                  <h4>10+</h4>
-                  <p>Projects Built</p>
-                </div>
-                <div className="achievement-item">
-                  <h4>500+</h4>
-                  <p>Happy Users</p>
-                </div>
+          </ScrollReveal>
+          <ScrollReveal direction="right">
+            <div>
+              <h2 className="about-section-title">Meet the Developer</h2>
+              <p className="about-text">Hi! I'm Roshan, a passionate full-stack developer who believes technology should empower people, not complicate their lives. Vidhya+ isn't just another project — it's personal. Growing up in India, I've seen the impact good tutors have on students' lives.</p>
+              <div className="skills-grid-3d">
+                {[
+                  { label: 'Frontend', desc: 'React.js, JavaScript, CSS3', color: 'var(--accent-blue)' },
+                  { label: 'Backend', desc: 'Node.js, Express.js, REST APIs', color: 'var(--accent-violet)' },
+                  { label: 'Database', desc: 'MongoDB, MySQL', color: 'var(--accent-cyan)' },
+                  { label: 'Design', desc: 'UI/UX, Responsive', color: 'var(--accent-amber)' },
+                ].map(skill => (
+                  <motion.div key={skill.label} className="skill-card-3d card-3d" whileHover={{y:-4,transition:{duration:0.25}}}> 
+                    <div className="skill-dot" style={{background:skill.color}} />
+                    <div><strong style={{color:'var(--text-white)'}}>{skill.label}</strong><p>{skill.desc}</p></div>
+                  </motion.div>
+                ))}
               </div>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
-      {/* Vision & Mission */}
-      <section className="vision-section">
-        <div className="content-container">
-          <div className="vision-grid">
-            <div className="vision-card">
-              <div className="vision-icon">🎯</div>
-              <h3>Mission</h3>
-              <p>
-                To empower every tuition teacher in India with affordable, easy-to-use 
-                technology that simplifies management and improves parent communication.
-              </p>
-            </div>
-
-            <div className="vision-card">
-              <div className="vision-icon">🚀</div>
-              <h3>Vision</h3>
-              <p>
-                A future where no teacher wastes time on paperwork. Where technology serves 
-                education, enabling tutors to focus 100% on teaching excellence.
-              </p>
-            </div>
-
-            <div className="vision-card">
-              <div className="vision-icon">💡</div>
-              <h3>Values</h3>
-              <p>
-                Simplicity over complexity. User needs over fancy features. 
-                Real feedback over assumptions. Impact over profit.
-              </p>
+      {/* Vision */}
+      <section className="about-section-3d">
+        <ScrollReveal direction="rotateX">
+          <div className="about-section-inner" style={{textAlign:'center'}}>
+            <span className="section-eyebrow-3d">Vision & Mission</span>
+            <h2 style={{marginBottom:'2rem'}}>What drives us</h2>
+            <div className="vision-grid-3d">
+              {[
+                { emoji: '🎯', title: 'Mission', desc: 'To empower every tuition teacher in India with affordable, easy-to-use technology.' },
+                { emoji: '🚀', title: 'Vision', desc: 'A future where no teacher wastes time on paperwork. Technology serves education.' },
+                { emoji: '💡', title: 'Values', desc: 'Simplicity over complexity. Real feedback over assumptions. Impact over profit.' },
+              ].map(v => (
+                <motion.div key={v.title} className="vision-card-3d card-3d" whileHover={{y:-6,rotateX:2,transition:{duration:0.3}}} style={{perspective:1200}}>
+                  <div style={{fontSize:'2rem',marginBottom:'0.75rem'}}>{v.emoji}</div>
+                  <h3>{v.title}</h3>
+                  <p>{v.desc}</p>
+                </motion.div>
+              ))}
             </div>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
-      {/* Why Solo Developer Section */}
-      <section className="solo-dev-section">
-        <div className="content-container">
-          <h2>Why a Solo Developer is Good for You</h2>
-          <p className="section-subtitle">
-            Being a one-person team isn't a limitation - it's an advantage
-          </p>
-
-          <div className="advantages-grid">
-            <div className="advantage-card">
-              <span className="advantage-number">01</span>
-              <h3>Direct Communication</h3>
-              <p>
-                Your feedback reaches me directly - no support tickets, no middlemen. 
-                Suggest a feature today, see it implemented tomorrow.
-              </p>
-            </div>
-
-            <div className="advantage-card">
-              <span className="advantage-number">02</span>
-              <h3>Built from Real Feedback</h3>
-              <p>
-                I personally talk to tutors, understand their pain points, and build 
-                features that actually matter - not what a corporate board thinks is cool.
-              </p>
-            </div>
-
-            <div className="advantage-card">
-              <span className="advantage-number">03</span>
-              <h3>Quick Bug Fixes</h3>
-              <p>
-                No bureaucracy, no approval chains. Found a bug? I can fix it the same day. 
-                Try getting that from a big company!
-              </p>
-            </div>
-
-            <div className="advantage-card">
-              <span className="advantage-number">04</span>
-              <h3>Personal Investment</h3>
-              <p>
-                This isn't just a job for me - it's my passion project. Your success with 
-                Vidhya+ is my success. I'm genuinely invested in making this work for you.
-              </p>
+      {/* CTA */}
+      <section className="about-section-3d" style={{textAlign:'center',paddingBottom:'4rem'}}>
+        <ScrollReveal direction="up">
+          <div className="about-cta-3d card-3d" style={{maxWidth:'500px',margin:'0 auto',padding:'3rem 2rem'}}>
+            <h2>Ready to Transform Your Tuition?</h2>
+            <p style={{color:'var(--text-secondary)',marginBottom:'1.5rem'}}>Join hundreds of tutors who've simplified their work.</p>
+            <div style={{display:'flex',gap:'1rem',justifyContent:'center',flexWrap:'wrap'}}>
+              <motion.button onClick={() => navigate('/register')} className="btn-primary" whileHover={{scale:1.03}} whileTap={{scale:0.97}}>Get Started Free</motion.button>
+              <motion.button onClick={() => navigate('/')} className="btn-ghost-3d" whileHover={{scale:1.02}} whileTap={{scale:0.98}}>Back to Home</motion.button>
             </div>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
-      {/* Tech Stack Section */}
-      <section className="tech-stack-section">
-        <div className="content-container">
-          <h2>Built with Modern Technology</h2>
-          <p className="section-subtitle">
-            Reliable, secure, and scalable architecture
-          </p>
-
-          <div className="tech-stack-grid">
-            <div className="tech-card">
-              <h4>Frontend</h4>
-              <ul>
-                <li>React.js - Modern UI framework</li>
-                <li>JavaScript - No TypeScript complexity</li>
-                <li>CSS3 - Beautiful, responsive design</li>
-                <li>React Router - Smooth navigation</li>
-              </ul>
-            </div>
-
-            <div className="tech-card">
-              <h4>Backend</h4>
-              <ul>
-                <li>Node.js - Fast, scalable server</li>
-                <li>Express.js - Robust API framework</li>
-                <li>JWT - Secure authentication</li>
-                <li>RESTful APIs - Industry standard</li>
-              </ul>
-            </div>
-
-            <div className="tech-card">
-              <h4>Database</h4>
-              <ul>
-                <li>MongoDB - Flexible NoSQL database</li>
-                <li>Mongoose - Data modeling</li>
-                <li>Cloud-ready - Easy deployment</li>
-                <li>Secure - Bank-grade encryption</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section className="contact-section">
-        <div className="content-container">
-          <h2>Let's Connect</h2>
-          <p className="section-subtitle">
-            Have questions, suggestions, or just want to say hi? I'd love to hear from you!
-          </p>
-
-          <div className="contact-grid">
-            <div className="contact-card">
-              <span className="contact-icon">📧</span>
-              <h3>Email</h3>
-              <p>Drop me an email anytime</p>
-              <button className="contact-btn">roshan@vidhyaplus.com</button>
-            </div>
-
-            <div className="contact-card">
-              <span className="contact-icon">💼</span>
-              <h3>LinkedIn</h3>
-              <p>Let's connect professionally</p>
-              <button className="contact-btn">Connect on LinkedIn</button>
-            </div>
-
-            <div className="contact-card">
-              <span className="contact-icon">💬</span>
-              <h3>WhatsApp</h3>
-              <p>Quick questions? WhatsApp me</p>
-              <button className="contact-btn">Chat on WhatsApp</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="about-cta">
-        <div className="cta-content">
-          <h2>Ready to Transform Your Tuition?</h2>
-          <p>Join hundreds of tutors who've simplified their work with Vidhya+</p>
-          <div className="cta-buttons">
-            <button onClick={() => navigate('/register')} className="btn-primary-cta">
-              Get Started Free
-            </button>
-            <button onClick={() => navigate('/')} className="btn-secondary-cta">
-              Back to Home
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="about-footer">
-        <p>&copy; 2024 Vidhya+. Built with ❤️ by Roshan. All rights reserved.</p>
+      <footer className="about-footer-3d">
+        <p>&copy; 2026 Vidhya+. Built with care by Roshan. All rights reserved.</p>
       </footer>
     </div>
   );
