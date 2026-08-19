@@ -17,11 +17,10 @@ import './App.css';
 function PageTransition({ children }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20, rotateX: 3 }}
-      animate={{ opacity: 1, y: 0, rotateX: 0 }}
-      exit={{ opacity: 0, y: -15, rotateX: -3 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -15 }}
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-      style={{ perspective: 1200 }}
     >
       {children}
     </motion.div>
@@ -38,6 +37,10 @@ function App() {
       authAPI.getMe()
         .then(() => { setIsAuthenticated(true); setUser(JSON.parse(userData)); })
         .catch(() => { localStorage.removeItem('user'); setIsAuthenticated(false); setUser(null); });
+    } else {
+      // Unauthenticated visitor — make a lightweight GET so the CSRF cookie
+      // is minted before the user registers or logs in.
+      authAPI.getMe().catch(() => { /* expected 401 */ });
     }
   }, []);
 

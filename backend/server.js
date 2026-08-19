@@ -83,9 +83,14 @@ app.use('/api/students', apiLimiter);
 app.use('/api/attendance', apiLimiter);
 app.use('/api/fees', apiLimiter);
 
+// Auth routes are public (no session to protect) — exempt from CSRF.
+app.use('/api/auth', require('./routes/auth'));
+
+// CSRF protection for all authenticated routes (students, attendance, fees).
+// Login/register are exempt because a new visitor has no CSRF cookie yet;
+// the cookie is minted on the first GET request after authentication.
 app.use(csrfProtection);
 
-app.use('/api/auth', require('./routes/auth'));
 app.use('/api/students', require('./routes/students'));
 app.use('/api/attendance', require('./routes/attendance'));
 app.use('/api/fees', require('./routes/fees'));

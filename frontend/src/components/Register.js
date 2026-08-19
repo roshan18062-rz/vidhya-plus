@@ -41,10 +41,9 @@ function Register() {
       <ParticleBackground />
       <motion.div
         className="auth-box-3d glass-strong"
-        initial={{ opacity: 0, y: 50, rotateX: 10, scale: 0.95 }}
-        animate={{ opacity: 1, y: 0, rotateX: 0, scale: 1 }}
+        initial={{ opacity: 0, y: 50, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        style={{ perspective: 1200, maxWidth: '520px' }}
       >
         <div className="auth-brand">
           <span className="brand-vidya" style={{ fontWeight: 700, fontSize: '1.8rem' }}>Vidhya</span>
