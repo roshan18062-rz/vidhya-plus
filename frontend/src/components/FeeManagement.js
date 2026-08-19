@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { studentsAPI, feesAPI } from '../services/api';
 
@@ -10,13 +10,13 @@ function FeeManagement() {
   const [paymentData, setPaymentData] = useState({ studentId: '', amount: '', paymentMode: 'cash', monthYear: new Date().toISOString().slice(0, 7) });
   const [feeStats, setFeeStats] = useState({});
 
-  useEffect(() => { fetchStudents(); fetchPendingFees(); fetchFeeStats(); fetchPaidStudents(); }, []);
-  useEffect(() => { fetchPaidStudents(); fetchPendingFees(); fetchFeeStats(); }, [paymentData.monthYear]);
+  const fetchStudents = useCallback(async () => { try { const r = await studentsAPI.getAll({ status: 'active', limit: 1000 }); setStudents(r.data.students || []); } catch (e) { setStudents([]); } }, []);
+  const fetchPaidStudents = useCallback(async () => { try { const r = await feesAPI.getAll({ monthYear: paymentData.monthYear, status: 'paid' }); setPaidStudents(r.data.map(f => f.studentId._id)); } catch (e) { setPaidStudents([]); } }, [paymentData.monthYear]);
+  const fetchPendingFees = useCallback(async () => { try { const r = await feesAPI.getPending(); setPendingFees(r.data); } catch (e) { /* ok */ } }, []);
+  const fetchFeeStats = useCallback(async () => { try { const r = await feesAPI.getStats(); setFeeStats(r.data); } catch (e) { /* ok */ } }, []);
 
-  const fetchStudents = async () => { try { const r = await studentsAPI.getAll({ status: 'active', limit: 1000 }); setStudents(r.data.students || []); } catch (e) { setStudents([]); } };
-  const fetchPaidStudents = async () => { try { const r = await feesAPI.getAll({ monthYear: paymentData.monthYear, status: 'paid' }); setPaidStudents(r.data.map(f => f.studentId._id)); } catch (e) { setPaidStudents([]); } };
-  const fetchPendingFees = async () => { try { const r = await feesAPI.getPending(); setPendingFees(r.data); } catch (e) { /* ok */ } };
-  const fetchFeeStats = async () => { try { const r = await feesAPI.getStats(); setFeeStats(r.data); } catch (e) { /* ok */ } };
+  useEffect(() => { fetchStudents(); fetchPendingFees(); fetchFeeStats(); fetchPaidStudents(); }, [fetchStudents, fetchPendingFees, fetchFeeStats, fetchPaidStudents]);
+  useEffect(() => { fetchPaidStudents(); fetchPendingFees(); fetchFeeStats(); }, [fetchPaidStudents, fetchPendingFees, fetchFeeStats]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

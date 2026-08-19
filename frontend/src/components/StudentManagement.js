@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { studentsAPI } from '../services/api';
 import { TableRowSkeleton } from './ui/SkeletonLoader';
@@ -16,9 +16,7 @@ function StudentManagement() {
   const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => { fetchStudents(); }, [filters, pagination.page]);
-
-  const fetchStudents = async () => {
+  const fetchStudents = useCallback(async () => {
     setLoading(true);
     try {
       const r = await studentsAPI.getAll({ ...filters, page: pagination.page, limit: pagination.limit });
@@ -26,11 +24,13 @@ function StudentManagement() {
       setPagination(prev => ({ ...prev, ...r.data.pagination }));
     } catch (e) { console.error(e); }
     finally { setLoading(false); }
-  };
+  }, [filters, pagination.page, pagination.limit]);
+
+  useEffect(() => { fetchStudents(); }, [fetchStudents]);
 
   const handleInputChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
   const handleFilterChange = (e) => { setFilters(prev => ({ ...prev, [e.target.name]: e.target.value })); setPagination(prev => ({ ...prev, page: 1 })); };
-  const debouncedSearch = useCallback(debounce((s) => { setFilters(prev => ({ ...prev, search: s })); setPagination(prev => ({ ...prev, page: 1 })); }, 500), []);
+  const debouncedSearch = useMemo(() => debounce((s) => { setFilters(prev => ({ ...prev, search: s })); setPagination(prev => ({ ...prev, page: 1 })); }, 500), []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

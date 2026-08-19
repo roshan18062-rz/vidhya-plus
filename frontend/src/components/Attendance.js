@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'motion/react';
 import { studentsAPI, attendanceAPI } from '../services/api';
 
@@ -7,29 +7,28 @@ function Attendance() {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [attendanceData, setAttendanceData] = useState({});
   const [classFilter, setClassFilter] = useState('');
-  const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => { fetchStudents(); }, [classFilter]);
-  useEffect(() => { fetchAttendanceForDate(); }, [selectedDate, students]);
-
-  const fetchStudents = async () => {
+  const fetchStudents = useCallback(async () => {
     try {
       const params = { status: 'active', limit: 1000 };
       if (classFilter) params.class = classFilter;
       const r = await studentsAPI.getAll(params);
       setStudents(r.data.students || []);
     } catch (e) { setStudents([]); }
-  };
+  }, [classFilter]);
 
-  const fetchAttendanceForDate = async () => {
+  const fetchAttendanceForDate = useCallback(async () => {
     try {
       const r = await attendanceAPI.getAll({ date: selectedDate });
       const map = {};
       r.data.forEach(rec => { map[rec.studentId._id] = rec.status; });
       setAttendanceData(map);
     } catch (e) { /* ok */ }
-  };
+  }, [selectedDate]);
+
+  useEffect(() => { fetchStudents(); }, [fetchStudents]);
+  useEffect(() => { fetchAttendanceForDate(); }, [fetchAttendanceForDate, students]);
 
   const markAllPresent = () => {
     const d = {};
