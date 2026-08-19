@@ -38,8 +38,9 @@ function App() {
         .then(() => { setIsAuthenticated(true); setUser(JSON.parse(userData)); })
         .catch(() => { localStorage.removeItem('user'); setIsAuthenticated(false); setUser(null); });
     } else {
-      // Unauthenticated visitor — make a lightweight GET so the CSRF cookie
-      // is minted before the user registers or logs in.
+      // Unauthenticated visitor — make a lightweight GET so the backend
+      // can mint the CSRF cookie early (the early-mint middleware in
+      // server.js sets it on any request that lacks one).
       authAPI.getMe().catch(() => { /* expected 401 */ });
     }
   }, []);

@@ -62,6 +62,22 @@ app.use(cookieParser());
 
 app.use(sanitizeRequest);
 
+// Mint the CSRF cookie early (GET only, harmless) so every visitor has one
+// before they hit POST /register or POST /login.  The full CSRF check
+// still lives in the csrfProtection middleware further down.
+app.use((req, res, next) => {
+  if (!req.cookies?.csrfToken) {
+    const token = require('crypto').randomBytes(32).toString('hex');
+    res.cookie('csrfToken', token, {
+      httpOnly: false,
+      secure: req.secure,
+      sameSite: req.secure ? 'none' : 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+  }
+  next();
+});
+
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 10,

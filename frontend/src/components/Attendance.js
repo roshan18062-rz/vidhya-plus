@@ -50,7 +50,7 @@ function Attendance() {
   const absentCount = Object.values(attendanceData).filter(v => v === 'absent').length;
 
   return (
-    <div className="attendance-3d" style={{ padding: '1.5rem', maxWidth: '1280px', margin: '0 auto' }}>
+    <div className="attendance-3d" style={{ padding: 'calc(64px + 1.5rem) 1.5rem 1.5rem', maxWidth: '1280px', margin: '0 auto' }}>
       <div className="ambient-bg"><div className="orb orb-1" /><div className="orb orb-2" /><div className="orb orb-3" /></div>
 
       <motion.div className="page-header" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
