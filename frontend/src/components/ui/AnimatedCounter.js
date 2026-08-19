@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 
 // Animated number counter that counts up when it enters viewport
 export default function AnimatedCounter({ end, duration = 2000, prefix = '', suffix = '' }) {
@@ -37,3 +38,10 @@ export default function AnimatedCounter({ end, duration = 2000, prefix = '', suf
 
   return <span ref={ref}>{prefix}{count.toLocaleString()}{suffix}</span>;
 }
+
+AnimatedCounter.propTypes = {
+  end: PropTypes.number.isRequired,
+  duration: PropTypes.number,
+  prefix: PropTypes.string,
+  suffix: PropTypes.string,
+};

@@ -26,7 +26,7 @@ function FeeManagement() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (paidStudents.includes(paymentData.studentId)) { const s = students.find(st => st._id === paymentData.studentId); alert(`${s.studentName} already paid for ${paymentData.monthYear}!`); return; }
+    if (paidStudents.includes(paymentData.studentId)) { const s = students.find(st => st._id === paymentData.studentId); if (!s) { alert('Student not found. Please refresh and try again.'); return; } alert(`${s.studentName} already paid for ${paymentData.monthYear}!`); return; }
     try {
       await feesAPI.create(paymentData); alert('Payment recorded!');
       setPaymentData({ studentId: '', amount: '', paymentMode: 'cash', monthYear: new Date().toISOString().slice(0, 7) });

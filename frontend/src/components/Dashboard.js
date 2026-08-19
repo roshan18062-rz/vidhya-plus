@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { studentsAPI, attendanceAPI, feesAPI } from '../services/api';
-import AnimatedCounter from './ui/AnimatedCounter';
 import { DashboardSkeleton } from './ui/SkeletonLoader';
 
 const staggerContainer = { hidden: {}, visible: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } } };

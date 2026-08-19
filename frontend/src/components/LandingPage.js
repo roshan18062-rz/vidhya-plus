@@ -234,9 +234,9 @@ function LandingPage() {
             <h4>Quick Links</h4>
             <ul>
               <li><a href="#features">Features</a></li>
-              <li><a href="javascript:void(0)" onClick={() => navigate('/about')}>About Us</a></li>
-              <li><a href="javascript:void(0)" onClick={() => navigate('/login')}>Login</a></li>
-              <li><a href="javascript:void(0)" onClick={() => navigate('/register')}>Register</a></li>
+              <li><button type="button" className="footer-link-btn" onClick={() => navigate('/about')}>About Us</button></li>
+              <li><button type="button" className="footer-link-btn" onClick={() => navigate('/login')}>Login</button></li>
+              <li><button type="button" className="footer-link-btn" onClick={() => navigate('/register')}>Register</button></li>
             </ul>
           </div>
           <div className="footer-col">

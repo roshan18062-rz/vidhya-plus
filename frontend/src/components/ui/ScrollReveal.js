@@ -1,5 +1,6 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef } from 'react';
 import { motion, useInView } from 'motion/react';
+import PropTypes from 'prop-types';
 
 // 3D scroll-triggered reveal with configurable direction and rotation
 export default function ScrollReveal({
@@ -60,3 +61,15 @@ export default function ScrollReveal({
     </motion.div>
   );
 }
+
+const VALID_DIRECTIONS = ['up', 'down', 'left', 'right', 'rotateX', 'rotateY'];
+
+ScrollReveal.propTypes = {
+  children: PropTypes.node.isRequired,
+  direction: PropTypes.oneOf(VALID_DIRECTIONS),
+  delay: PropTypes.number,
+  duration: PropTypes.number,
+  className: PropTypes.string,
+  once: PropTypes.bool,
+  amount: PropTypes.number,
+};

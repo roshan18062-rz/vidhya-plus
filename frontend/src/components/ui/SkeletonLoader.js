@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 // Skeleton card for loading states
 export function CardSkeleton({ lines = 3 }) {
@@ -13,6 +14,10 @@ export function CardSkeleton({ lines = 3 }) {
   );
 }
 
+CardSkeleton.propTypes = {
+  lines: PropTypes.number,
+};
+
 // Skeleton row for tables
 export function TableRowSkeleton({ cols = 6 }) {
   return (
@@ -25,6 +30,10 @@ export function TableRowSkeleton({ cols = 6 }) {
     </tr>
   );
 }
+
+TableRowSkeleton.propTypes = {
+  cols: PropTypes.number,
+};
 
 // Skeleton for dashboard grid
 export function DashboardSkeleton() {
