@@ -142,7 +142,7 @@ function Dashboard({ user }) {
       </motion.div>
 
       <style>{`
-        .dashboard-3d { padding: 1.5rem; max-width: 1280px; margin: 0 auto; position: relative; min-height: calc(100vh - 64px); }
+        .dashboard-3d { padding: calc(64px + 1.5rem) 1.5rem 1.5rem; max-width: 1280px; margin: 0 auto; position: relative; min-height: 100vh; }
         .dashboard-3d-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
         .dashboard-3d-header h1 { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--text-white); margin: 0; }
         .dash-welcome { color: var(--text-tertiary); font-size: 0.9rem; margin-top: 0.25rem; }

@@ -27,6 +27,12 @@ const CSRF_HEADER = 'x-csrf-token';
 const SAFE_METHODS = ['GET', 'HEAD', 'OPTIONS'];
 
 const csrfProtection = (req, res, next) => {
+  // Defense in depth: always skip auth routes regardless of middleware order.
+  // Login / register must work for visitors who don't have a CSRF cookie yet.
+  if (req.originalUrl && req.originalUrl.startsWith('/api/auth/')) {
+    return next();
+  }
+
   let token = req.cookies?.[CSRF_COOKIE];
 
   if (!token) {

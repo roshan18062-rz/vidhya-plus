@@ -55,7 +55,7 @@ export default function ScrollReveal({
         delay,
         ease: [0.22, 1, 0.36, 1],
       }}
-      style={{ perspective: 1200 }}
+      style={{ perspective: direction === 'rotateX' || direction === 'rotateY' ? 1200 : undefined }}
     >
       {children}
     </motion.div>
